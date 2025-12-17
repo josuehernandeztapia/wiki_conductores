@@ -81,12 +81,12 @@ El archivo contiene una PWA en HTML/JS que simula los flujos asesor/cliente:
 
 ---
 
-## 6. Pendientes Identificados
+## 6. Pendientes / avances
 
-1. **Migrar contenido completo** de `PWA - HU.docx` a `CORE_FASE3B` (actualmente sólo referenciado) para que la wiki sea autosuficiente.
-2. **Documentar reglas dinámicas** del Paybook directamente en `CORE_FASE3C` (ya en proceso) y mantener este anexo como referencia histórica.
-3. **Integración Angular↔Odoo**: elaborar guía técnica en FASE4 (payloads, DTOs, autenticación) partiendo de `PWA - Integración con Odoo.docx`.
-4. **Subir assets UX** (Visily, Flowise) a `/assets` y enlazarlos en `CORE_FASE2B_UX_WIREFRAMES.md` para cerrar el gap visual.
-5. **Actualizar DemoPWA** con datos reales/hardcoded para entrenamiento y enlazarlo en la wiki (ej. sección “Recursos” de FASE3B).
+- ✅ `PWA - HU.docx` migrado en `CORE_FASE3B_HISTORIAS_USUARIO.md` (ver sección “Matriz de trazabilidad”).
+- ✅ Paybook integrado en `CORE_FASE3C_REGLAS_NEGOCIO.md` con tablas completas.
+- ✅ Integración Angular↔Odoo documentada en `CORE_FASE4_INTEGRACIONES.md` (subsección BFF→Odoo, payloads y DTOs).
+- ✅ Assets (Visily, Flowise) + DemoPWA enlazados en `CORE_FASE2B_UX_WIREFRAMES.md`.
+- 🔄 DemoPWA seguirá recibiendo datos reales cuando el BFF se conecte al entorno productivo; mantener este anexo como bitácora de cambios (último sync 17-dic-2025).
 
-Con este anexo se documenta el material crítico de la carpeta PWA; faltan mover los elementos pendientes dentro de las fases correspondientes y sincronizar la implementación Angular con los anexos existentes.
+Con este anexo se documenta el material crítico de la carpeta PWA; el foco inmediato pasa a mantener la paridad entre código Angular, BFF y las reglas de negocio.

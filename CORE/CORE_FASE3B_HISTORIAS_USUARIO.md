@@ -2,6 +2,8 @@
 
 **Blueprint Maestro v6.0** - Plataforma de Operaciones "Conductores del Mundo"
 
+> Fuente original: `Desktop/Accion/2025/Conductores/PWA/PWA - HU.docx` (sincronizado el 17-dic-2025). El contenido completo del documento vive ahora en esta fase y se referencia permanentemente desde `ANEXO_PWA_IMPLEMENTACION.md`.
+
 ---
 
 ## 📋 VISIÓN GENERAL
@@ -50,6 +52,17 @@ Odoo es la fuente de verdad contable. Cada transacción financiera debe reflejar
 | **Épica 4: Expediente Digital** | HU #13-#14 | Gestión documental |
 | **Épica 5: Conversión y Alertas** | HU #15-#20 | Flujos colectivos y notificaciones |
 | **Épica 6: Puesta en Producción** | HU #21-#25 | Integración de APIs reales |
+
+### 🧾 Matriz de trazabilidad HU ↔ componentes
+
+| Documento origen | Sección en la wiki | Componentes Angular / servicios afectados |
+|------------------|-------------------|------------------------------------------|
+| `PWA - HU.docx` | Este blueprint (`CORE_FASE3B`) | `Sidebar`, `Cockpit`, `Configurator`, `DocumentCenter`, `CollectiveCredit`, `IntegrationsStatus` |
+| `PWA - ANGULAR TERCERA VUELTA.docx` | `CORE_FASE2B_UX_WIREFRAMES.md` | Flujo guiado, badges contextuales, dashboard operador |
+| `Paybook Reglas de Negocio PWA.docx` | `CORE_FASE3C_REGLAS_NEGOCIO.md` | Validaciones de paquetes, checklists, pago híbrido |
+| `DemoPWA.docx` | `CORE_FASE2B_UX_WIREFRAMES.md` (sección Demo) | Rutas `#/asesor/dashboard`, `#/cliente/{token}`, pruebas guiadas |
+
+Cada HU incluye enlaces al anexo técnico para mantener alineados los DTOs y las reglas de negocio.
 
 ---
 
@@ -829,6 +842,7 @@ Ver **CORE_FASE4_INTEGRACIONES.md** para detalles de integración.
 - **CORE_FASE2_ARQUITECTURA.md** - Stack técnico (NestJS, Angular, PostgreSQL)
 - **CORE_FASE4_INTEGRACIONES.md** - Detalles de las 8 integraciones
 - **CORE_FASE3C_REGLAS_NEGOCIO.md** - Reglas de negocio detalladas (próximo documento)
+- **ANEXO_PWA_IMPLEMENTACION.md** - Evidencia y referencias cruzadas HU ↔ Angular ↔ Odoo
 
 ---
 

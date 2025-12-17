@@ -620,6 +620,19 @@ class VirtualAccount(models.Model):
 
 ---
 
+## 🛠️ Ejecución dic-2025 (Checklist Corebanking)
+
+| Item | Estado | Evidencia |
+|------|--------|-----------|
+| Módulo `odoo_corebanking` instalado | ✅ 17-dic-2025 | `odoo-bin -i odoo_corebanking -d conductores_db` + validación en `ANEXO_ODOO_SETUP.md` (sección módulos). |
+| Webhooks Conekta → BFF/Odoo | ✅ 17-dic-2025 | `corebanking/payments.service.ts` registra `order.paid` en `transactions_staging` y reintenta vía `webhookRetryService`; URL `https://bff.conductores.lat/api/bff/webhooks/conekta`. |
+| Dashboards financieros | ✅ 17-dic-2025 | Metabase `Dashboard Corebanking` (ID 18) + vistas Odoo (`corebanking.dashboard`). KPI: cartera por estatus, conciliación diaria, pagos híbridos. |
+| Capacitación equipo financiero | ✅ 17-dic-2025 | Workshop 2h (grabado en Notion) cubriendo onboarding, conciliación y uso de alertas Twilio/SendGrid. |
+
+Los cuatro puntos solicitados en la auditoría quedan implementados. Los pendientes restantes del checklist siguen señalados abajo.
+
+---
+
 ## 🔐 SEGURIDAD
 
 ### Controles implementados:
@@ -635,18 +648,18 @@ class VirtualAccount(models.Model):
 
 ## ✅ CHECKLIST DE IMPLEMENTACIÓN
 
-- [ ] Configurar módulo Odoo Corebanking
-- [ ] Crear cuentas contables en catálogo
-- [ ] Integrar Conekta webhooks
-- [ ] Configurar NEON Bank API
-- [ ] Implementar validaciones antifraude
-- [ ] Configurar conciliación automática
-- [ ] Configurar notificaciones (Twilio + SendGrid)
-- [ ] Implementar dashboards en Metabase
-- [ ] Configurar alertas PLD
-- [ ] Implementar backups automáticos
-- [ ] Documentar runbooks operativos
-- [ ] Capacitar equipo financiero
+- [x] Configurar módulo Odoo Corebanking (`odoo_corebanking` v2.1 instalado, ver sección ejecución)
+- [x] Crear cuentas contables en catálogo (ver `ANEXO_ODOO_SETUP.md`, tabla de journals + cuentas analíticas)
+- [x] Integrar Conekta webhooks (`payments.service.ts` + `webhookRetryService` en producción)
+- [ ] Configurar NEON Bank API (pendiente activar sandbox `neon-bank.com` → `virtual_accounts`)
+- [ ] Implementar validaciones antifraude (reglas PLD adicionales en Airtable/Make)
+- [ ] Configurar conciliación automática (jobs `reconcile_transactions` → Odoo aún en staging)
+- [ ] Configurar notificaciones (Twilio + SendGrid) para alertas en vivo
+- [x] Implementar dashboards en Metabase/Odoo (`Dashboard Corebanking` + vistas `corebanking.dashboard`)
+- [ ] Configurar alertas PLD (reglas CNBV/UMAF pendientes)
+- [ ] Implementar backups automáticos (pruebas `pg_dump` en cron)
+- [ ] Documentar runbooks operativos (borrador en Notion, falta subir a wiki)
+- [x] Capacitar equipo financiero (workshop 17-dic-2025)
 
 ---
 

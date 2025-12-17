@@ -2,6 +2,8 @@
 
 **Playbook de Reglas de Negocio v1.0**
 
+> Fuente consolidada desde `Desktop/Accion/2025/Conductores/PWA/Paybook Reglas de Regocio PWA.docx` (dump completo migrado el 17-dic-2025). Las tablas de este documento están enlazadas al anexo `ANEXO_PWA_IMPLEMENTACION.md` y sirven como guardas para los validadores de Angular/Nest.
+
 ---
 
 ## 📋 PROPÓSITO

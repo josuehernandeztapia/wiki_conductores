@@ -476,6 +476,61 @@ invoice_data = models.execute_kw(
 )
 ```
 
+### BFF ↔ Odoo (NestJS)
+
+> Fuente: `pwa_angular/bff/src/odoo/*.ts` + `PWA - Integración con Odoo.docx`.
+
+- **Configuración:**
+  - Variables: `ODOO_BASE_URL`, `ODOO_API_KEY`, `ODOO_STAGING_URL` (ver `production-endpoints.config.ts`).
+  - `OdooModule` se carga en el BFF (`app.module.ts`) con controladora `api/bff/odoo/quotes`.
+  - Se usa API Key en encabezado `X-Odoo-Key` para llamadas REST wrappers y XML-RPC para operaciones contables.
+
+- **DTOs (bff/src/odoo/dto.ts):**
+
+| DTO | Campos | Validaciones |
+|-----|--------|--------------|
+| `CreateDraftDto` | `clientId?`, `market?`, `notes?`, `meta?` | `@IsString` / `@IsOptional` para todos los campos; permite adjuntar payloads del cotizador. |
+| `AddLineDto` | `sku?`, `oem?`, `name` (requerido), `equivalent?`, `qty?`, `unitPrice`, `currency?`, `meta?` | `qty` y `unitPrice` validan `@IsNumber` + `@Min`; default `currency=MXN`. |
+
+- **Endpoints expuestos por el BFF:**
+
+```http
+POST /api/bff/odoo/quotes
+Authorization: Bearer <BFF_API_KEY>
+Content-Type: application/json
+
+{
+  "clientId": "uuid-cliente",
+  "market": "EdoMex",
+  "notes": "Paquete productivo obligatorio",
+  "meta": {
+    "hu": "HU-08",
+    "advisor": "asesor@conductores.lat"
+  }
+}
+
+→ { "quoteId": "Q-mlg34p", "number": "SO51234" }
+
+POST /api/bff/odoo/quotes/Q-mlg34p/lines
+{
+  "sku": "H6C-BASE",
+  "name": "Vagoneta H6C 19p",
+  "qty": 1,
+  "unitPrice": 799000,
+  "currency": "MXN"
+}
+
+→ { "quoteId": "Q-mlg34p", "lineId": "L-rl45ht", "total": 799000, "currency": "MXN" }
+```
+
+- **Lógica de servicio (`OdooService`):** mantiene `drafts` en memoria para demo/offline y, cuando `ODOO_API_KEY` está activo, reenvía las solicitudes a Odoo (XML-RPC `sale.order`/`sale.order.line`). Cualquier creación de línea recalcula el total y expone la suma al frontend.
+
+- **Webhooks y reintentos:**
+  - `POST /api/bff/webhooks/odoo` recibe eventos `model`/`method` y los replica en NEON/Airtable.
+  - `PaymentsService` permite configurar `odoo_webhook_url` y `odoo_auth_token` para que los cobros enviados por Conekta lleguen a `sale.order`/`account.move` mediante el `webhookRetryService` (cola con DLQ y métricas).
+
+Esta capa BFF abstrae la autenticación, agrupa DTOs amigables para Angular y mantiene resiliencia mediante rate limiting (100 req/min) y políticas de reintento.
+
 ---
 
 ## 🔌 Integración 6: OpenAI (GPT-4)

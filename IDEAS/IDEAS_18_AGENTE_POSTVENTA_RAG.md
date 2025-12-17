@@ -200,6 +200,56 @@ Ten listos los **manuales técnicos de Higer en PDF** (asegúrate que el texto s
 
 ---
 
+## 🌐 Integración con NEON/Odoo (Datos vivos)
+
+> Objetivo: que el agente no dependa sólo de PDFs, sino también de los catálogos en NEON/Odoo ya versionados en `CORE_FASE8_NEON_DATABASE.md`.
+
+1. **Credenciales**
+   - `X-Neon-Key`: token almacenado en `flowise_neon_api_key` (Make.com y Flowise).
+   - `BFF_BASE_URL`: `https://pwa-bff.conductores.lat` (modo staging) para acceder a `/api/bff/catalogs/*`.
+
+2. **Endpoints disponibles** (ver OpenAPI `CORE/neon_openapi_full.yml`):
+   - `GET /v1/spare_parts?query=` → catálogos nacionalizados.
+   - `GET /v1/spare_parts/{id}/equivalences` → proveedores (Bosch, Mann, Toyota OEM).
+   - `GET /v1/spare_stock?warehouse_code=` → existencias por almacén (`CDMX-01`, `AGS-02`).
+   - `GET /v1/fault_catalog?codigo=` → descripción y severidad del código de falla.
+
+3. **Escenario Make.com (Fase 3)**
+   ```text
+   Trigger: WhatsApp webhook (Twilio)
+   ↓
+   Router (clasifica si es falla o refacción)
+   ↓
+   HTTP module → GET /v1/fault_catalog?codigo=P0420
+   ↓
+   HTTP module → GET /v1/spare_parts?query=90915-YZZE1
+   ↓
+   JSON aggregator → compone respuesta + enlaces Odoo/stock
+   ↓
+   Flowise (RAG) → genera respuesta natural usando contenido técnico + payload NEON
+   ↓
+   Twilio responde al operador y registra ticket en Airtable
+   ```
+
+4. **Prompts Flowise**
+   - Incluir contexto estructurado:
+     ```json
+     {
+       "fault": {{fault_catalog}},
+       "spares": {{spare_parts}},
+       "stock": {{spare_stock}}
+     }
+     ```
+   - Instrucciones extra: “Si `stock_disponible` = 0, sugiere equivalencias (provider_name) y `lead_time_days` para importación. Si `fault.criticidad = 'critica'`, agrega CTA “Escala a taller Higer”.”
+
+5. **PWA**
+   - Componentes `SparePartsSearch` y `ProtectionFlow` consumen los mismos endpoints vía BFF (auth `Authorization: Bearer <BFF>`).
+   - El token `X-Neon-Key` sólo se usa server-side; el frontend recibe datos ya saneados.
+
+Con esta integración el agente responde con datos vivos (stock, tiempos de entrega, equivalencias) y se cierra el gap señalado en la auditoría.
+
+---
+
 ### Paso 1.2: Configurar la Base de Datos Vectorial (Pinecone)
 
 1. En Pinecone, haz clic en **"Create Index"**

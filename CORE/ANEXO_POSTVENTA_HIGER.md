@@ -94,3 +94,27 @@ Esto alimenta la HU6/HU8 y se integra con el agente RAG (IDEAS_18) para sugerenc
 5. **Fase 4 – Telemetría**: Conectar lecturas GPS/OBD para mantenimientos predictivos (alertas automáticas + sugerencia de refacciones).
 
 Con este anexo se cubre el gap identificado en la auditoría (“POSTVENTA HIGER”). El siguiente paso es integrar estas tablas en NEON/Odoo y conectar la PWA/IA siguiendo el roadmap.
+
+---
+
+## 8. Integración NEON ↔ Odoo ↔ PWA/RAG
+
+| Capa | Elementos | Notas |
+|------|-----------|-------|
+| **NEON** | Tablas `spare_parts`, `part_equivalences`, `spare_stock`, `fault_catalog`, endpoints `/v1/spare_parts`, `/v1/spare_stock`, `/v1/fault_catalog`. | Datos ya cargados (388K consumos GNV, 60 fallas, 120 equivalencias). OpenAPI: `CORE/neon_openapi_full.yml`. |
+| **Odoo** | `product.template`, `stock.quant`, `stock.location`. Webhook `api/bff/webhooks/odoo` actualiza `spare_stock` cuando cambia el inventario. | `warehouse_code` = `stock.location.complete_name` para mantener paridad. |
+| **PWA (Angular)** | Componentes `SparePartsSearch`, `ProtectionFlow`, `CollectiveCredit` consumen `/api/bff/catalogs/spare-parts?query=` y muestran `stock_disponible`, equivalencias y tiempos de importación. | Respuestas cacheadas 60s en BFF. |
+| **Agente RAG (IDEAS_18)** | Escenario Make.com → `HTTP` → `/v1/fault_catalog?codigo=` + `/v1/spare_parts/{id}`. Flowise añade tablas a la memoria (Pinecone). | Permite contestar “¿Qué pieza necesito para código P0420?” con datos NEON + equivalencias nacionales. |
+
+**Pipeline de sincronización:**
+1. `psql -f part_equivalences_inserts.sql` alimenta NEON.
+2. Script `sync_odoo_spare_stock.py` corre cada hora (`cron`) → lee `stock.quant` via XML-RPC, actualiza `spare_stock`.
+3. BFF expone `/api/bff/catalogs/*` y notifica al agente RAG cuando hay cambios (`webhookRetryService` → Flowise/Airtable).
+4. La PWA muestra existencias, precios y lead time; si `stock_disponible=0`, ofrece equivalencias (Bosch, Mann, Toyota OEM) y crea orden en Odoo.
+
+**Autenticación:**
+- `X-Neon-Key` para llamadas desde BFF/Make.
+- `Authorization: Bearer <BFF>` para exponer datos a PWA.
+- `flowise_neon_api_key` (secret) almacenado en Make.com para el escenario IDEAS_18.
+
+Esta sección cierra el gap “integrar catálogos en NEON/Odoo y conectarlos con la PWA y el agente RAG” descrito en la auditoría.

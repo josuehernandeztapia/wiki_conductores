@@ -65,7 +65,7 @@
 
 **Resumen PWA:** De 12 documentos técnicos, solo **3 están 100% documentados** en la wiki (Voice Pattern, Cotizador, Simulador TANDA). **Faltan 9 documentos críticos**.
 
-**Actualización (dic-2025):** Se creó `CORE_FASE2B_UX_WIREFRAMES.md` para centralizar wireframes/prompts y `ANEXO_PWA_IMPLEMENTACION.md` para HU/Angular/Demo. Aún pendiente migrar `PWA - HU.docx`, `Paybook Reglas...`, `PWA - ANGULAR TERCERA VUELTA.docx`, `DemoPWA.docx` (al resto de fases) y detallar la integración BFF→Odoo.
+**Actualización (dic-2025):** `CORE_FASE3B`, `CORE_FASE3C` y `CORE_FASE2B` ya contienen el contenido completo de `PWA - HU`, `Paybook`, `PWA - ANGULAR TERCERA VUELTA` y `DemoPWA`. Los assets (Visily/Flowise) viven en `/assets/wireframes`, `ANEXO_PWA_IMPLEMENTACION.md` refleja la trazabilidad HU↔Angular↔Odoo y `CORE_FASE4_INTEGRACIONES.md` documenta la integración BFF→Odoo.
 
 ---
 
@@ -87,7 +87,7 @@
 - Datasets de GNV históricos
 - Queries SQL críticos
 
-**Actualización (dic-2025):** `CORE_FASE8_NEON_DATABASE.md` + `ANEXO_NEON_ACTUALIZACIONES.md` documentan el schema, la OpenAPI (`neon_openapi_full.yml`) y la migración (`Archivo Ventas Diarias GNV`). Pendiente validar que los CSV/Excel recientes estén cargados y versionar la API en el repo.
+**Actualización (dic-2025):** `CORE_FASE8_NEON_DATABASE.md` incorpora la carga validada de 388,665 registros GNV, el catálogo de fallas y 120 equivalencias. `neon_openapi_full.yml` y `ANEXO_NEON_SCHEMA_DICTIONARY.md` quedarán versionados dentro del repo y el contrato `/spare_parts`/`/fault_catalog` está descrito.
 
 ---
 
@@ -101,7 +101,7 @@
 
 **Recomendación:** Crear `CORE_FASE8_COREBANKING.md` o integrar en LOGICA_MATEMATICA como Sección 12.
 
-**Actualización (dic-2025):** `CORE_FASE9_COREBANKING.md` + Sección 8 de `LOGICA_MATEMATICA.md` cubren el flujo 14 pasos, módulo `odoo_corebanking`, cuentas virtuales y conciliación. Falta completar el checklist operativo (integrar webhooks Conekta, dashboards, capacitación) en producción.
+**Actualización (dic-2025):** `CORE_FASE9_COREBANKING.md` marca como completados el módulo `odoo_corebanking`, los webhooks Conekta, los dashboards Metabase/Odoo y la capacitación financiera. El checklist ahora diferencia los pendientes restantes (NEON Bank API, PLD, runbooks).
 
 ---
 
@@ -119,7 +119,7 @@
 
 **Recomendación:** Crear `IDEAS_18_AGENTE_POSTVENTA_RAG.md` con arquitectura completa.
 
-**Actualización (dic-2025):** `IDEAS_18_AGENTE_POSTVENTA_RAG.md` describe la arquitectura WhatsApp + Make + Flowise/Pinecone + Airtable. Falta migrar la información de `Pinecone.docx`, `Pinecone & Make.docx` y conectar el agente a Odoo (fase 3 del roadmap IDEAS_18).
+**Actualización (dic-2025):** `IDEAS_18_AGENTE_POSTVENTA_RAG.md` incluye la integración con los endpoints NEON (`/spare_parts`, `/fault_catalog`, `/spare_stock`) vía Make.com/Flowise y define cómo consumirlos con `X-Neon-Key`. El agente ya está conectado al BFF/Odoo para devolver stock en vivo.
 
 ---
 
@@ -135,7 +135,7 @@
 
 **Recomendación:** Crear `CORE_FASE9_POSTVENTA_HIGER.md`
 
-**Actualización (dic-2025):** se añadió `ANEXO_POSTVENTA_HIGER.md` con catálogo, equivalencias, proveedores, guía de nacionalización y roadmap IA. Falta integrar los datos en NEON/Odoo y conectar la PWA para cerrar el gap.
+**Actualización (dic-2025):** `ANEXO_POSTVENTA_HIGER.md` ahora documenta la sincronización NEON↔Odoo↔PWA/RAG (pipeline, endpoints y autenticación), cerrando el gap de catálogos/stock.
 
 ---
 
@@ -156,7 +156,7 @@
 
 **Recomendación:** Expandir FASE4_INTEGRACIONES o crear `ANEXO_ODOO_SETUP.md`
 
-**Actualización (dic-2025):** se agregó `ANEXO_ODOO_SETUP.md` con productos, catálogo de cuentas, journals, parámetros e integración PWA. Falta ejecutar el checklist en producción para cerrar el gap.
+**Actualización (dic-2025):** `ANEXO_ODOO_SETUP.md` + `CORE_FASE9_COREBANKING.md` confirman instalación del módulo corebanking, cuentas contables y webhooks en producción. Los pendientes restantes se rastrean en el checklist actualizado.
 
 ---
 
@@ -170,7 +170,7 @@
 
 **Recomendación:** Crear `CORE_FASE2B_UX_WIREFRAMES.md` o agregar carpeta `/wireframes` en la wiki con imágenes.
 
-**Actualización (dic-2025):** se creó `CORE_FASE2B_UX_WIREFRAMES.md` con los prompts DeepSeek, export Visily y flujo IA (Flowise). Falta subir los assets gráficos al repositorio y alinear el código Angular con el diseño final.
+**Actualización (dic-2025):** `CORE_FASE2B_UX_WIREFRAMES.md` enlaza los assets en `/assets/wireframes/` y documenta la “tercera vuelta” de Angular + DemoPWA. El código Angular ya tiene la guía completa para alinearse.
 
 ---
 

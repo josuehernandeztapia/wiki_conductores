@@ -8,6 +8,13 @@
 
 Documentar la experiencia de usuario para asesores, operadores y administradores, incluyendo prompts de diseño, wireframes y conexiones con IA/postventa para asegurar una implementación consistente entre PWA, backend y Odoo.
 
+### Fuentes sincronizadas (17-dic-2025)
+
+- `PWA - ANGULAR TERCERA VUELTA.docx` → navegabilidad quirúrgica y componentes Angular.
+- `DemoPWA.docx` → demo ejecutable en HTML/JS para entrenamiento.
+- `FlowiseAI_UX_Postventa.png` y `Visily-Export_26-06-2025_07-31.pdf` ahora viven en `assets/wireframes/` dentro del repositorio.
+- `ANEXO_PWA_IMPLEMENTACION.md` centraliza referencias cruzadas HU ↔ UI ↔ servicios.
+
 ---
 
 ## 1. Componentes Prioritarios
@@ -37,7 +44,11 @@ Contiene mockups de:
 - Marketplace/Store con upsells
 - Gamification leaderboard
 
-**Pendiente:** extraer imágenes clave y anexarlas (conversión a PNG/JPG). Se sugiere subir snapshots a `/wireframes` en el repo.
+**Assets:**
+- [PDF Visily (download)](../assets/wireframes/Visily-Export_26-06-2025_07-31.pdf)
+- Vista clave Flowise/IA:
+
+![FlowiseUX](../assets/wireframes/FlowiseAI_UX_Postventa.png)
 
 ### 2.2 Flujo IA postventa (`FlowiseAI_UX_Postventa.png`)
 
@@ -67,8 +78,54 @@ Imagen (2111×275 px) con el pipeline del agente RAG (WhatsApp → Twilio → Ma
 
 ## 5. Pendientes
 
-- Migrar los wireframes (PDF/PNG) al repositorio (pos. `/assets/wireframes/`).
-- Extraer contenido de `PWA - Integración con Odoo.docx`, `PWA - ANGULAR TERCERA VUELTA.docx`, `Paybook Reglas...` y unificarlo con HU/Reglas.
-- Documentar específicamente el “Panel Admin RAG” y “Dashboard operador” con datos reales (ej. valores HASE/TIR/Protección Rodando) para que el equipo de BI pueda replicarlos.
+- ✅ Wireframes (Visily) + Flowise export alojados en `assets/wireframes/`.
+- ✅ Contenido de `PWA - ANGULAR TERCERA VUELTA.docx` y `DemoPWA.docx` integrado en las secciones 6 y 7.
+- Pendiente: añadir capturas con datos reales del Panel Admin RAG y Dashboard operador una vez que NEON/Odoo expongan métricas definitivas.
 
 Con este anexo se cubre el gap de wireframes/UX identificado en la auditoría. Falta completar los assets visuales y alinear el código Angular con el diseño final.
+
+---
+
+## 6. Flujo guiado Angular ("Tercera Vuelta")
+
+> Fuente directa: `PWA - ANGULAR TERCERA VUELTA.docx` (dump 17-dic-2025).
+
+### 6.1 Pilares de navegación
+
+| Pilar | Descripción quirúrgica | Componentes |
+|-------|------------------------|-------------|
+| **Barra lateral adaptativa** | Estado colapsado/expandido con badges de tareas pendientes; agrupa módulos por flujo (Prospección, Operación, Aftermarket). | `SidebarComponent`, `NavBadge`, `ModuleGroup` |
+| **Header contextual** | Botón `+ Nueva Oportunidad` obliga a abrir `SimulatorLanding` y ata cada simulación a un lead; muestra estado de integraciones. | `Header.tsx`, `ActionButtons`, `IntegrationsStatus` |
+| **Menú inferior móvil** | Cuatro accesos directos (Pagos, Protección, Mi Unidad, Soporte) sincronizados con los KPIs del operador. | `BottomNav`, `QuickActionsComponent` |
+| **Alertas y gamificación** | “Puntos RAG”, badges de puntualidad y estados `At Risk / On Track` visibles en tarjetas y en el cockpit. | `GamificationBadge`, `AlertTimeline` |
+
+### 6.2 Módulos críticos
+
+- **Dashboard operador (`DashboardOperator`):** tarjetas con saldo pendiente, próximo pago, ahorro GNV y CTA “Activar Protección”; incluye mapa de ruta y ranking de rutas.
+- **Activación Protección Rodando (`ProtectionFlow`):** Secuencia A) alerta push, B) confirmación con plan recalculado, C) mensaje “unidad sigue protegida”.
+- **Panel Admin RAG (`AdminRagPanel`):** heatmap morosidad por ruta, widgets TIR cartera, % uso protección, alertas HASE; alimentado por NEON → Metabase.
+- **Onboarding digital (`OnboardingFlow`):** 4 pantallas (SMS, upload docs, simulador ahorro, firma digital). El paso 3 conecta al comparador GNV vs gasolina.
+- **Simulator/Cotizador (`SimulatorLanding`, `Cotizador`):** modos `Camaleón` (oferta), `SavingsProjectionChart`, `RemainderBar`, `TandaTimeline`. El botón “Formalizar” redirige a `ClientDetail` con el expediente dinámico.
+- **Grupos Colectivos (`CollectiveCredit`):** constructor de eventos “what-if” y línea de tiempo mensual para la bola de nieve de aportaciones.
+
+Todas las rutas están descritas en `ANEXO_PWA_IMPLEMENTACION.md` y ligadas a las HU equivalentes.
+
+---
+
+## 7. DemoPWA interactiva
+
+> Fuente directa: `DemoPWA.docx` (HTML demo incluida en el doc).
+
+- **Router hash:** `#/login`, `#/asesor/dashboard`, `#/asesor/lead/{id}`, `#/cliente/{token}`. Permite abrir simultáneamente la vista de asesor y cliente.
+- **Persistencia:** `localStorage` (`cd_leads_v1`) para leads, tokens y estados (captura, KYC, aprobado, contrato firmado, pago enganche).
+- **Panel rápido:** muestra ruta actual, enlaces de impresión/pruebas y estados de integraciones simulados.
+- **Flujos incluidos:** creación de lead, subida simulada de documentos, ejecución de KYC (`startKyc → approved/manual/rejected`), formalización de crédito y seguimiento de etapas.
+- **Modo pruebas (`runTests`):** dispara aserciones básicas sobre rutas, creación de tokens, actualización de etapas y limpieza de datos.
+
+**Uso recomendado:**
+1. Abrir `index.html` de la demo (desde el doc) en dos pestañas.
+2. Iniciar sesión como asesor y generar un lead con token.
+3. Abrir la segunda pestaña como cliente con el token para recorrer el onboarding.
+4. Verificar en el dashboard del asesor cómo cambian las etapas y alertas en tiempo real.
+
+La demo es la referencia rápida para equipo comercial/capacitación mientras los servicios reales (BFF + Odoo) se estabilizan.

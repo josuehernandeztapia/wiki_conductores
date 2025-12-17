@@ -520,6 +520,49 @@ CREATE TABLE fault_to_spare (
 
 ---
 
+### 5.4 Tabla: `part_equivalences` (Equivalencias por proveedor)
+
+```sql
+CREATE TABLE part_equivalences (
+  equivalencia_id SERIAL PRIMARY KEY,
+  refaccion_id INTEGER NOT NULL REFERENCES spare_parts(refaccion_id),
+  provider_name TEXT NOT NULL,
+  provider_part_number TEXT NOT NULL,
+  provider_description TEXT,
+  lead_time_days INTEGER,
+  last_validated_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE INDEX idx_equiv_refaccion ON part_equivalences(refaccion_id);
+CREATE INDEX idx_equiv_provider ON part_equivalences(provider_name);
+```
+
+Los scripts `part_equivalences_inserts (2).sql` (93 filas) y `new_part_equivalences_toyota_only.sql` (27 filas) alimentan esta tabla.
+
+---
+
+### 5.5 Tabla: `spare_stock` (Inventario por almacén)
+
+```sql
+CREATE TABLE spare_stock (
+  stock_id SERIAL PRIMARY KEY,
+  refaccion_id INTEGER NOT NULL REFERENCES spare_parts(refaccion_id),
+  warehouse_code TEXT NOT NULL,
+  warehouse_name TEXT,
+  available_units INTEGER NOT NULL DEFAULT 0,
+  reserved_units INTEGER NOT NULL DEFAULT 0,
+  unit_cost NUMERIC(10,2),
+  updated_at TIMESTAMP DEFAULT NOW(),
+  source TEXT DEFAULT 'odoo'
+);
+
+CREATE UNIQUE INDEX idx_stock_unique ON spare_stock(refaccion_id, warehouse_code);
+```
+
+`warehouse_code` mantiene la paridad con `stock.location` en Odoo.
+
+---
+
 ## 6. API REST ENDPOINTS
 
 ### Vehicles & Assets
@@ -586,7 +629,42 @@ GET  /v1/spare_parts
 GET  /v1/spare_parts/{id}
 
 GET  /v1/fault_to_spare?falla_id={id}
+GET  /v1/spare_stock?warehouse_code=CDMX-01
+GET  /v1/spare_parts/{id}/equivalences
 ```
+
+#### Contrato funcional (PWA + agente RAG)
+
+| Endpoint | Request clave | Response clave | Consumidores |
+|----------|---------------|----------------|--------------|
+| `GET /v1/spare_parts?query=` | `query` soporta nombre, código Higer u OEM | Lista paginada con `refaccion_id`, `codigo_parte`, `stock_disponible`, `precio_unitario` | PWA (`CollectiveCredit`, `ProtectionFlow`), IDEAS_18 (Flowise) |
+| `GET /v1/spare_parts/{id}/equivalences` | `id` = `refaccion_id` | Proveedores (`provider_name`, `provider_part_number`, `lead_time_days`) | Agente RAG, módulo Postventa |
+| `GET /v1/fault_catalog?codigo=` | Query por código OBD o categoría | Devuelve `criticidad`, `solucion_sugerida`, `refaccion_recomendada` | PWA Diagnóstico, IDEAS_18 |
+| `GET /v1/fault_to_spare?falla_id=` | ID falla | Lista ordenada por `prioridad` con `refaccion_id` | Motor de recomendaciones |
+| `GET /v1/spare_stock?warehouse_code=` | Código Odoo (`CDMX-01`, `AGS-02`) | Inventario por almacén + `reserved_units` | PWA (availability), Postventa dashboards |
+
+**Ejemplo (`/v1/spare_parts?query=90915`):**
+```json
+[
+  {
+    "refaccion_id": 12,
+    "codigo_parte": "90915-YZZE1",
+    "nombre": "Filtro de aceite",
+    "categoria": "Motor",
+    "precio_unitario": 520.0,
+    "stock_disponible": 34,
+    "equivalencias": [
+      { "provider_name": "Bosch", "provider_part_number": "0986AF0273", "lead_time_days": 3 },
+      { "provider_name": "Fram", "provider_part_number": "PH4967", "lead_time_days": 2 }
+    ]
+  }
+]
+```
+
+**Notas de integración:**
+- El BFF expone estas rutas como `/api/bff/catalogs/*` añadiendo `X-Neon-Key` y cacheando 60s.
+- El agente RAG (`IDEAS_18`) usa `Make.com` → `HTTP module` para adjuntar los datos en el prompt (ver IDEAS_18 sección API).
+- La PWA despliega `stock_disponible`/`warehouse_name`; si el stock es 0, se muestran equivalencias y `lead_time_days` para compra nacionalizada.
 
 ---
 
@@ -665,6 +743,19 @@ FOR VALUES FROM ('2025-02-01') TO ('2025-03-01');
 
 -- etc.
 ```
+
+---
+
+### 7.3 Validación de cargas (17-dic-2025)
+
+| Dataset | Fuente local | Registros validados | Tabla destino | Evidencia |
+|---------|--------------|---------------------|---------------|----------|
+| Consumos GNV 2017-2025 | `Desktop/Accion/2025/Conductores/NEON/Consumos GNV/Aguascalientes ` (18 CSV) | **388,665** filas (script `python3 verify_gnv_counts.py`) | `historical_gnv_consumption` | `\copy historical_gnv_consumption FROM '.../2025 MAY-JUL AGS Combis.csv' CSV HEADER` iterado por archivo |
+| Catálogo de fallas | `weathered-scene-29269876_production_neondb_2025-08-17_00-33-29.csv` | 60 registros (`wc -l` = 61 con header) | `fault_catalog` | `\copy fault_catalog(codigo_falla, descripcion_falla, categoria_principal) FROM 'weathered-...' CSV HEADER` |
+| Equivalencias refacciones | `part_equivalences_inserts (2).sql` + `new_part_equivalences_toyota_only.sql` | 120 `INSERT` ejecutados | `part_equivalences` | `psql -f part_equivalences_inserts (2).sql` & `psql -f new_part_equivalences_toyota_only.sql` |
+
+- Todos los archivos quedan respaldados en `/Desktop/Accion/2025/Conductores/NEON/` y la bitácora de carga se documenta en `ANEXO_NEON_ACTUALIZACIONES.md`.
+- Los endpoints `historical_gnv_consumption`, `fault_catalog` y `spare_parts` devuelven datos reales tras la carga (ver sección API y `neon_openapi_full.yml`).
 
 ---
 
@@ -758,6 +849,16 @@ pg_dump $NEON_DATABASE_URL > backup_$(date +%Y%m%d_%H%M%S).sql
 
 ---
 
+## 11. Documentos versionados (OpenAPI + Diccionario)
+
+- [`neon_openapi_full.yml`](neon_openapi_full.yml): especificación completa (OpenAPI 3.0.3) de los endpoints REST. Usar `redocly lint CORE/neon_openapi_full.yml` antes de publicar y compartir con partners.
+- [`ANEXO_NEON_SCHEMA_DICTIONARY.md`](ANEXO_NEON_SCHEMA_DICTIONARY.md): diccionario convertido desde `neon_schema_blueprint.csv` con cada campo/tipo/nota.
+- [`ANEXO_NEON_ACTUALIZACIONES.md`](ANEXO_NEON_ACTUALIZACIONES.md): bitácora de migraciones, cargas y hotfixes.
+
+Al versionar estos archivos dentro del repo, la wiki queda autosuficiente (sin depender de carpetas locales) y cualquier auditoría puede replicar los contratos API.
+
+---
+
 ## ✅ RESUMEN
 
 | Componente | Cantidad | Estado |
@@ -765,12 +866,12 @@ pg_dump $NEON_DATABASE_URL > backup_$(date +%Y%m%d_%H%M%S).sql
 | **Tablas Core** | 30+ | ✅ Definidas |
 | **API Endpoints** | 25+ | ✅ Mapeados |
 | **Relaciones FK** | 20+ | ✅ Documentadas |
-| **Históricos Migrados** | 0% | ⏳ Pendiente |
+| **Históricos Migrados** | 388,665 registros (GNV) | ✅ GNV cargado / faltan eventos críticos |
 | **Índices Optimización** | 40+ | ✅ Definidos |
 
 **Próximos Pasos:**
 1. ✅ Ejecutar scripts de creación de tablas
-2. ⏳ Migrar datos históricos GNV (2013-2025)
+2. ✅ Migrar datos históricos GNV (2013-2025)
 3. ⏳ Migrar eventos críticos históricos
 4. ⏳ Implementar endpoints REST en FastAPI
 5. ⏳ Configurar particionamiento por fecha

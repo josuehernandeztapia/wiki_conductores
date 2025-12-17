@@ -1,0 +1,240 @@
+
+openapi: 3.0.3
+info:
+  title: Neon Fleet API
+  version: "1.0.0"
+  description: Full CRUD endpoints for vehicles, events, business, history, analytics.
+servers:
+  - url: https://api.neon.tech/v1
+paths:
+  /vehicles:
+    get:
+      summary: List vehicles
+      responses:
+        '200':
+          description: Array of vehicles
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Vehicle' }
+    post:
+      summary: Create vehicle
+      requestBody:
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/Vehicle' }
+      responses:
+        '201': { description: Created }
+  /vehicles/{id}:
+    get:
+      summary: Get vehicle
+      parameters:
+        - in: path
+          name: id
+          schema: { type: string }
+          required: true
+      responses:
+        '200':
+          description: Detail
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Vehicle' }
+    put:
+      summary: Update vehicle
+      parameters:
+        - in: path
+          name: id
+          schema: { type: string }
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/Vehicle' }
+      responses:
+        '200': { description: Updated }
+    delete:
+      summary: Delete vehicle
+      parameters:
+        - in: path
+          name: id
+          schema: { type: string }
+          required: true
+      responses:
+        '204': { description: Deleted }
+
+  /location_event:
+    get:
+      summary: List location events
+      parameters:
+        - in: query
+          name: vehicle_id
+          schema: { type: string }
+        - in: query
+          name: from
+          schema: { type: string, format: date-time }
+        - in: query
+          name: to
+          schema: { type: string, format: date-time }
+      responses:
+        '200':
+          description: List of location events
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/LocationEvent' }
+    post:
+      summary: Create location event
+      requestBody:
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/LocationEvent' }
+      responses:
+        '201': { description: Created }
+
+  /location_event/{id}:
+    get:
+      summary: Get a location event
+      parameters:
+        - in: path
+          name: id
+          schema: { type: integer }
+          required: true
+      responses:
+        '200':
+          description: Event details
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/LocationEvent' }
+    put:
+      summary: Update location event
+      parameters:
+        - in: path
+          name: id
+          schema: { type: integer }
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/LocationEvent' }
+      responses:
+        '200': { description: Updated }
+    delete:
+      summary: Delete location event
+      parameters:
+        - in: path
+          name: id
+          schema: { type: integer }
+          required: true
+      responses:
+        '204': { description: Deleted }
+
+  # CRUD for each resource ...
+  /metric:
+    get:
+      summary: List metrics
+      parameters:
+        - in: query
+          name: vehicle_id
+          schema: { type: string }
+      responses:
+        '200':
+          description: List of metrics
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Metric' }
+    post:
+      summary: Create metric entry
+      requestBody:
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/Metric' }
+      responses:
+        '201': { description: Created }
+
+  /metric/{ts}:
+    get:
+      summary: Get metric by timestamp
+      parameters:
+        - in: path
+          name: ts
+          schema: { type: string, format: date-time }
+          required: true
+      responses:
+        '200':
+          description: Metric details
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Metric' }
+    put:
+      summary: Update metric entry
+      parameters:
+        - in: path
+          name: ts
+          schema: { type: string, format: date-time }
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/Metric' }
+      responses:
+        '200': { description: Updated }
+    delete:
+      summary: Delete metric entry
+      parameters:
+        - in: path
+          name: ts
+          schema: { type: string, format: date-time }
+          required: true
+      responses:
+        '204': { description: Deleted }
+
+  # Siguiente: Agrega la misma lógica CRUD para driver_behavior_event, dtc_event, customers, contracts, transactions, onboarding_verifications, historical_gnv_consumption, historical_critical_events, hase_scores, pma_alerts, fault_catalog
+
+components:
+  schemas:
+    Vehicle:
+      type: object
+      properties:
+        id: { type: string }
+        vin: { type: string }
+        plate: { type: string }
+        make: { type: string }
+        model: { type: string }
+        year: { type: integer }
+        alta_at: { type: string, format: date-time }
+    LocationEvent:
+      type: object
+      properties:
+        id: { type: integer }
+        vehicle_id: { type: string }
+        ts: { type: string, format: date-time }
+        lat: { type: number }
+        lon: { type: number }
+        speed_kph: { type: number }
+        heading_deg: { type: number }
+        ignition: { type: boolean }
+        event_id: { type: string, format: uuid }
+    Metric:
+      type: object
+      properties:
+        vehicle_id: { type: string }
+        ts: { type: string, format: date-time }
+        odometer_km: { type: number }
+        rpm: { type: number }
+        battery_v: { type: number }
+        dtc_count: { type: integer }
+        coolant_temp_c: { type: number }
+        engine_load_pct: { type: number }
+        oil_level_pct: { type: number }
+        oil_pressure_kpa: { type: number }
+        air_flow_maf: { type: number }
+        alternator_v: { type: number }
+        fuel_level_pct: { type: number }
+        fuel_consumption_rate_lph: { type: number }
+        fuel_economy_l100km: { type: number }
+        idle_time_sec: { type: integer }
+    # Completa schemas para cada recurso de la base (ve los ejemplos) hasta pma_alerts/fault_catalog
