@@ -65,7 +65,7 @@
 
 **Resumen PWA:** De 12 documentos técnicos, solo **3 están 100% documentados** en la wiki (Voice Pattern, Cotizador, Simulador TANDA). **Faltan 9 documentos críticos**.
 
-**Actualización (dic-2025):** Se creó `CORE_FASE2B_UX_WIREFRAMES.md` para centralizar wireframes/prompts y se refirió a `ANEXO_ODOO_SETUP.md` desde HU relevantes. Aún pendiente migrar `PWA - HU.docx`, `Paybook Reglas...`, `PWA - ANGULAR TERCERA VUELTA.docx`, `DemoPWA.docx` y detallar la integración BFF→Odoo.
+**Actualización (dic-2025):** Se creó `CORE_FASE2B_UX_WIREFRAMES.md` para centralizar wireframes/prompts y `ANEXO_PWA_IMPLEMENTACION.md` para HU/Angular/Demo. Aún pendiente migrar `PWA - HU.docx`, `Paybook Reglas...`, `PWA - ANGULAR TERCERA VUELTA.docx`, `DemoPWA.docx` (al resto de fases) y detallar la integración BFF→Odoo.
 
 ---
 
@@ -87,7 +87,7 @@
 - Datasets de GNV históricos
 - Queries SQL críticos
 
-**Actualización (dic-2025):** `CORE_FASE8_NEON_DATABASE.md` documenta schema, endpoints y migración (incluyendo `Archivo Ventas Diarias GNV`). Falta validar que los CSV/Excel recientes estén cargados en NEON y mantener la API (`neon_openapi_full.yml`) sincronizada.
+**Actualización (dic-2025):** `CORE_FASE8_NEON_DATABASE.md` + `ANEXO_NEON_ACTUALIZACIONES.md` documentan el schema, la OpenAPI (`neon_openapi_full.yml`) y la migración (`Archivo Ventas Diarias GNV`). Pendiente validar que los CSV/Excel recientes estén cargados y versionar la API en el repo.
 
 ---
 

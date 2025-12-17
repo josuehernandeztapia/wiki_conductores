@@ -41,6 +41,8 @@ ANEXOS/
 └── ANEXO_ODOO_SETUP.md              # Configuración completa Odoo + Core Banking
 └── ANEXO_POSTVENTA_HIGER.md         # Refacciones nacionalizadas + soporte postventa
 └── CORE_FASE2B_UX_WIREFRAMES.md     # UX, wireframes y flujos Visily/DeepSeek
+└── ANEXO_PWA_IMPLEMENTACION.md      # HU, reglas y demo Angular de la PWA
+└── ANEXO_NEON_ACTUALIZACIONES.md    # OpenAPI, diccionario y migraciones GNV
 ```
 
 #### Resumen de Cada Fase
@@ -330,6 +332,8 @@ ROE: 18% anual
 - [ ] Consulté ANEXO_ODOO_SETUP.md (configuración ERP)
 - [ ] Consulté ANEXO_POSTVENTA_HIGER.md (refacciones y soporte postventa)
 - [ ] Consulté CORE_FASE2B_UX_WIREFRAMES.md (wireframes y UX)
+- [ ] Consulté ANEXO_PWA_IMPLEMENTACION.md (HU/Angular/Demo)
+- [ ] Consulté ANEXO_NEON_ACTUALIZACIONES.md (schema/API/migraciones)
 - [ ] Exploré al menos 5 archivos IDEAS
 - [ ] Revisé el backend en ~/Documents/conductores-backend/
 - [ ] Entiendo la propuesta de valor completa
