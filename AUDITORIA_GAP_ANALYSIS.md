@@ -146,6 +146,8 @@
 
 **Recomendación:** Expandir FASE4_INTEGRACIONES o crear `ANEXO_ODOO_SETUP.md`
 
+**Actualización (dic-2025):** se agregó `ANEXO_ODOO_SETUP.md` con productos, catálogo de cuentas, journals, parámetros e integración PWA. Falta ejecutar el checklist en producción para cerrar el gap.
+
 ---
 
 ### 7. **Wireframes y Flujos UX** ❌ CRÍTICO

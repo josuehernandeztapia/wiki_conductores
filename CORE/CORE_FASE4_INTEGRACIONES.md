@@ -378,6 +378,8 @@ Horario: 24/7 (SPEI 3.0)
 
 ## 🔌 Integración 5: Odoo ERP
 
+> Notas operativas completas (módulos, productos, journals, parámetros) en `ANEXO_ODOO_SETUP.md`.
+
 ### Información General
 ```yaml
 Proveedor: Odoo S.A.

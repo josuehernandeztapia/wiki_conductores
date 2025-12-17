@@ -36,6 +36,9 @@ CORE/
 ├── CORE_FASE5_TESTING.md            # Unit, integration, E2E tests
 ├── CORE_FASE6_DEPLOYMENT.md         # AWS, CI/CD, rollback
 └── CORE_FASE7_MONITORING.md         # Métricas, logs, alertas
+
+ANEXOS/
+└── ANEXO_ODOO_SETUP.md              # Configuración completa Odoo + Core Banking
 ```
 
 #### Resumen de Cada Fase
@@ -322,6 +325,7 @@ ROE: 18% anual
 - [ ] Leí CORE_FASE5_TESTING.md
 - [ ] Leí CORE_FASE6_DEPLOYMENT.md
 - [ ] Leí CORE_FASE7_MONITORING.md
+- [ ] Consulté ANEXO_ODOO_SETUP.md (configuración ERP)
 - [ ] Exploré al menos 5 archivos IDEAS
 - [ ] Revisé el backend en ~/Documents/conductores-backend/
 - [ ] Entiendo la propuesta de valor completa
