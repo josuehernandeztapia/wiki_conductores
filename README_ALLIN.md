@@ -2,9 +2,9 @@
 
 > **Plataforma fintech de créditos automotrices con scoring alternativo para conductores de plataformas digitales en México**
 
-**Última actualización:** Diciembre 2024
-**Estado:** MVP Documentado + Piloto Operativo (HU24/HU25) Listo
-**Completitud:** 100%
+**Última actualización:** Diciembre 2025
+**Estado:** Documentación completa + PWA/BFF en avance; HU24/HU25 con runbooks, cierre operativo pendiente
+**Completitud:** Documentación 100% (ejecución operativa variable por módulo)
 
 ---
 
@@ -36,7 +36,7 @@
 ┌─────────────────────────────────────────────────────────────┐
 │                         FRONTEND                             │
 ├─────────────────────────────────────────────────────────────┤
-│ PWA (Angular 18)                                             │
+│ PWA (Angular 17+ - código real en pwa_angular_v5)                                             │
 │ - Offline-first, Progressive Web App                         │
 │ - Cockpit asesor + portal cliente                           │
 │ - Cotizador dinámico (AGS/EdoMéx)                           │
@@ -89,6 +89,32 @@
 │ - OpenTelemetry (distributed tracing)                       │
 └─────────────────────────────────────────────────────────────┘
 ```
+
+---
+
+## 🧩 PWA — Realidad y avance (código)
+
+Repositorio de referencia (código real, no wiki):
+- GitHub: josuehernandeztapia/pwa_angular_v5
+
+Estado real (según código):
+- Angular standalone bootstrap (bootstrapApplication) y rutas centralizadas en src/app/app.routes.ts.
+- Feature flags extensivos en src/environments/environment.base.ts para habilitar/deshabilitar módulos (LAB, Postventa Wizard, Integraciones, Admin, Claims, QA, Flow Builder, Perfil, etc.).
+- Modo “real” vs “mock”: existe enableMockData y un override en runtime (globalThis.__USE_MOCK_DATA__ = true) para forzar mocks sin recompilar.
+- Navegación productiva prioriza: Dashboard, Clientes, Cotizador, Simulador, Documentos, Entregas, GNV, Protección y Configuración. Módulos adicionales aparecen por feature flag.
+
+Rutas implementadas (alto nivel):
+- Autenticación: /login, /register, /verify-email
+- Núcleo: /dashboard, /clientes/*, /oportunidades, /nueva-oportunidad
+- Motor financiero: /cotizador/*, /simulador/*
+- Expediente/contratos: /documentos, /expedientes, /contratos/generacion
+- Operaciones: /entregas, /ops/*, /gnv, /tracking/client/:clientId
+- Configuración: /configuracion, /configuracion/politicas, /configuracion/flow-builder (flag)
+- Condicionales: /postventa/wizard, /integraciones, /administracion, /claims, /qa/monitoring, /usage, /lab/*
+
+Implicación para la wiki:
+- La wiki debe reflejar explícitamente que la PWA ya tiene “skeleton productivo” y ruteo/guards/flags; pero varios flujos HU (especialmente HU24/HU25) dependen de activar backend real y de apagar mocks en staging/prod.
+- Ver anexo quirúrgico: CORE/ANEXO_PWA_REALIDAD_Y_AVANCE_PWA_ANGULAR_V5.md
 
 ---
 
@@ -250,8 +276,7 @@
 **Implementación/Lab (avance IA):**
 - Existe una PWA de laboratorio para Voz/AVI (`avi_lab`) enfocada en captura de audio + evaluación contra el BFF y generación de datasets.
 - Flujo demo del lab: grabar audio → enviar al BFF (`/v1/voice/evaluate-audio`) → ver `voiceScore/flags/decision` → exportar dataset.
-- Dataset ampliado: 55 preguntas (con subset de 12 críticas + set de preguntas de alto estrés). Nota: en producción la lógica "Voice Pattern" de la wiki sigue usando el set operativo de 12 preguntas; el dataset ampliado sirve para entrenamiento/experimentos y calibración.
-- Ver detalles de integración con plataforma en `CORE/ANEXO_IA_IMPLEMENTACIONES_EXTERNAS.md`
+- Dataset ampliado: 55 preguntas (con subset de 12 críticas + set de preguntas de alto estrés). Nota: en producción la lógica “Voice Pattern” de la wiki sigue usando el set operativo de 12 preguntas; el dataset ampliado sirve para entrenamiento/experimentos y calibración.
 
 ### 8. OpenAI + Pinecone (Agente RAG Postventa)
 **Arquitectura:** WhatsApp → Twilio → Make.com → Flowise → OpenAI (GPT-4) → Pinecone
@@ -265,13 +290,9 @@
 
 
 **Implementación en código (avance IA):**
-- Además del blueprint No‑Code (Make/Flowise), existe una implementación funcional en FastAPI (`agente_postventa`) con enfoque "API-first".
+- Además del blueprint No‑Code (Make/Flowise), existe una implementación funcional en FastAPI (`agente_postventa`) con enfoque “API-first”.
 - Incluye RAG híbrido (Pinecone + BM25) y endpoints listos para integración (ej. `POST /query`, `POST /query_hybrid`, `POST /twilio/whatsapp`, `GET /health`, `GET /metrics`).
 - La operación/despliegue y variables de entorno están documentadas en el propio repo (archivo `OPERATIONS.md`).
-
-**Mapeo repos IA y runbook operativo:**
-- `CORE/ANEXO_IA_IMPLEMENTACIONES_EXTERNAS.md` - Mapea wiki ↔ repos externos (agente_postventa + avi_lab), contratos de endpoints, puntos de acople con plataforma Conductores
-- `CORE/ANEXO_LLMOPS_AGENTOPS.md` - Runbook LLMOps/AgentOps completo: Docker, CI/CD, pipelines de datos, WhatsApp/Twilio, observabilidad, seguridad, QA, incidentes
 
 ---
 
@@ -447,7 +468,7 @@ wiki_conductores/
 │   │   ├── FASE3B_HISTORIAS_USUARIO.md
 │   │   └── FASE3C_REGLAS_NEGOCIO.md
 │   │
-│   ├── Anexos (11 docs)
+│   ├── Anexos (9 docs)
 │   │   ├── ANEXO_ODOO_SETUP.md
 │   │   ├── ANEXO_POSTVENTA_HIGER.md
 │   │   ├── ANEXO_PWA_IMPLEMENTACION.md
@@ -456,9 +477,7 @@ wiki_conductores/
 │   │   ├── ANEXO_SECRETS_ENVIRONMENTS.md
 │   │   ├── ANEXO_RUNBOOK_INCIDENTES.md
 │   │   ├── ANEXO_BFF_STUBS_TO_PROD.md
-│   │   ├── ANEXO_IMPLEMENTACION_HU24_CODE_TASKS.md
-│   │   ├── ANEXO_IA_IMPLEMENTACIONES_EXTERNAS.md
-│   │   └── ANEXO_LLMOPS_AGENTOPS.md
+│   │   └── ANEXO_IMPLEMENTACION_HU24_CODE_TASKS.md
 │   │
 │   ├── Checklists (2 docs)
 │   │   ├── CHECKLIST_HU24_HU25_OPERATIVO.md
@@ -640,7 +659,7 @@ wiki_conductores/
 **Metodología:** Manual Quirúrgico (10 fases)
 **Repositorio:** https://github.com/josuehernandeztapia/wiki_conductores
 **Estado:** MVP Documentado + Piloto Operativo Listo
-**Última actualización:** Diciembre 2024
+**Última actualización:** Diciembre 2025
 
 **Documentación externa:**
 - FastAPI: https://fastapi.tiangolo.com/
@@ -678,17 +697,8 @@ wiki_conductores/
 - [ ] Leí FASE6_DEPLOYMENT.md (AWS infra)
 - [ ] Leí FASE7_MONITORING.md (observabilidad)
 - [ ] Leí ANEXO_SECRETS_ENVIRONMENTS.md
-- [ ] Leí ANEXO_LLMOPS_AGENTOPS.md (servicios IA)
 - [ ] Revisé scripts/preflight_hu24_hu25.sh
 - [ ] Entiendo runbook incidentes
-
-### Ingeniero IA/ML
-- [ ] Leí IDEAS_18_AGENTE_POSTVENTA_RAG.md (blueprint RAG)
-- [ ] Leí IDEAS_99_CIERRE_RAG_POSTVENTA.md (checklist operativo)
-- [ ] Leí ANEXO_IA_IMPLEMENTACIONES_EXTERNAS.md (mapeo repos)
-- [ ] Leí ANEXO_LLMOPS_AGENTOPS.md (runbook completo)
-- [ ] Leí LOGICA_MATEMATICA.md Sección 6 (Voice Pattern)
-- [ ] Revisé repos: agente_postventa + avi_lab
 
 ### Operaciones/Finanzas
 - [ ] Leí FASE9_COREBANKING.md (flujo 14 pasos)
@@ -705,13 +715,12 @@ wiki_conductores/
 |------------|--------|------------|
 | **Blueprint completo** | 100% ✅ | 10 fases CORE |
 | **Especificaciones técnicas** | 100% ✅ | OpenAPI, schemas, anexos |
-| **Runbooks operativos** | 100% ✅ | FASE10, checklists, LLMOps/AgentOps |
+| **Runbooks operativos** | 100% ✅ | FASE10, checklists |
 | **Guías implementación** | 100% ✅ | HU24 code tasks |
 | **Scripts validación** | 100% ✅ | preflight |
 | **Schemas infraestructura** | 100% ✅ | webhook DDL |
 | **Templates evidencias** | 100% ✅ | HU24/HU25 |
 | **Assets visuales** | 100% ✅ | Wireframes, flows |
-| **Mapeo repos IA externos** | 100% ✅ | agente_postventa, avi_lab |
 
 **Completitud Global: 100%** 🎉
 

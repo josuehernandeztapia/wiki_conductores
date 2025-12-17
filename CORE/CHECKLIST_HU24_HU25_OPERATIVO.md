@@ -13,6 +13,32 @@
 - [ ] Validación de config en arranque (si falta algo crítico → fail-fast)  
   **Evidencia:** log de arranque + caso negativo (staging) mostrando rechazo
 
+### A.1) PWA (Angular) — configuración y smoke test
+- [ ] PWA desplegada/levantada apuntando al BFF real (staging/prod) y NO a mocks
+  - Validar baseURL (ej. environment.apiUrl) apunta a /api del BFF
+  - Validar que no se activa globalThis.__USE_MOCK_DATA__ en staging/prod
+  **Evidencia:** screenshot del build/env (redactado) + Network tab mostrando requests reales al BFF
+- [ ] Mocks deshabilitados en staging/prod (gate HU24/HU25)
+  - enableMockData = false (o equivalente)
+  - preview routes bloqueadas en prod (/preview/*)
+  **Evidencia:** configuración + intento de acceso a /preview/* en prod (debe fallar o redirigir)
+
+Smoke test UI mínimo (con AuthGuard):
+- [ ] /dashboard carga
+- [ ] /clientes carga (list) y abre detalle de un cliente real
+- [ ] /cotizador (ags-individual y edomex-colectivo) carga y ejecuta cálculo base
+- [ ] /simulador (edomex-individual o tanda-colectiva) carga
+- [ ] /documentos permite avanzar SOLO cuando guards pasan (AVI completo, plazo válido, etc.)
+- [ ] /contratos/generacion accesible sólo cuando ContractReadyGuard pasa
+- [ ] /gnv y /ops/gnv-health muestran datos reales (NEON/BFF)
+  **Evidencia:** screenshots + correlation_id + logs BFF correlacionados
+
+Opcional (si habilitados por flags/rol):
+- [ ] /integraciones (semáforo) consumiendo /health/integrations (o equivalente)
+- [ ] /postventa/wizard (4 fotos) si entra al piloto
+- [ ] /entregas y /ops/deliveries si el piloto incluye logística
+
+
 ### B) Odoo (CRM + Accounting + Corebanking)
 - [ ] Autenticación XML-RPC/JSON-RPC operativa en staging/prod
 - [ ] CRUD mínimo:
@@ -31,6 +57,7 @@
   - [ ] validación de firma
   - [ ] idempotencia (mismo evento no duplica)
   - [ ] reintentos + DLQ en caso de error
+  - [ ] cola/DLQ **persistente en NEON** (no en memoria): `webhook_jobs`, `webhook_attempts`, `webhook_dlq` (ver `CORE/sql/001_webhook_retry_tables.sql`)
 - [ ] Persistencia: evento + transacción quedan en NEON/Odoo (según FASE9)  
 **Evidencia:** payload redactado + logs + IDs (order_id, payment_id)
 
@@ -103,6 +130,7 @@
 
 ### 2) Evidencias mínimas (carpeta)
 - [ ] `EVIDENCIAS/HU25/00_preflight/`
+  - [ ] `preflight_output.txt` generado con `CORE/scripts/preflight_hu24_hu25.sh`
 - [ ] `EVIDENCIAS/HU25/01_alta_cliente/`
 - [ ] `EVIDENCIAS/HU25/02_kyc/`
 - [ ] `EVIDENCIAS/HU25/03_scoring/`
