@@ -10,6 +10,8 @@ Este documento es la **fuente única de verdad** para todas las reglas, lineamie
 
 La PWA del asesor debe ser programada para **ejecutar y validar estas reglas automáticamente**.
 
+> Los detalles de configuración en Odoo (productos, cuentas, parámetros, core bancario) se encuentran en `ANEXO_ODOO_SETUP.md`.
+
 ---
 
 ## 🗺️ ESTRUCTURA: 2 MERCADOS, 4 PRODUCTOS

@@ -8,6 +8,8 @@
 
 Este documento es la fuente única de verdad para la reconstrucción de la plataforma PWA. El objetivo es crear una **PWA de clase empresarial** que funcione como el **"Playbook Digital"** para los asesores.
 
+> Configuraciones completas en Odoo (productos, cuentas analíticas, journals, parámetros) se documentan en `ANEXO_ODOO_SETUP.md`.
+
 La plataforma integrará todos los flujos de negocio:
 - ✅ Venta de Contado
 - ✅ Ahorro Programado
@@ -233,7 +235,7 @@ DASHBOARD ASESOR
 **Quiero** poder configurar en Odoo "Paquetes de Producto" por mercado, definiendo todos los componentes, precios y reglas de financiamiento
 **Para que** la PWA del asesor pueda consumir esta configuración y construir el cotizador dinámicamente sin tener la lógica de negocio en el frontend
 
-**Integraciones:** Odoo
+**Integraciones:** Odoo (ver `ANEXO_ODOO_SETUP.md` para scripts y componentes)
 
 **Ejemplo de Configuración:**
 ```yaml
@@ -367,7 +369,7 @@ Pago Mensual: $9,876 MXN
 **Integraciones:**
 - API de GNV
 - Conekta
-- Odoo
+- Odoo (cuentas analíticas; referencia en anexo)
 
 **Ejemplo de Conciliación:**
 ```
@@ -731,7 +733,7 @@ Ver **CORE_FASE4_INTEGRACIONES.md** para detalles de integración.
 **Quiero** que todos los flujos que interactúan con Odoo (CRM, Contabilidad, Ventas) se conecten a nuestra instancia de producción
 **Para que** Odoo funcione como nuestro ledger centralizado
 
-**Integraciones:** Odoo (producción)
+**Integraciones:** Odoo (producción; configuración detallada en `ANEXO_ODOO_SETUP.md`)
 
 **Módulos de Odoo a integrar:**
 - CRM (gestión de oportunidades)

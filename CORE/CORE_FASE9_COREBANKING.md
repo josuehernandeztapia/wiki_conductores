@@ -20,6 +20,8 @@ Sistema bancario **ligero y escalable** para Conductores del Mundo que maneja:
 
 **Sin core bancario tradicional** → Uso de Odoo + Airtable + APIs.
 
+> La configuración completa de productos, journals, cuentas y parámetros de Odoo se documenta en `ANEXO_ODOO_SETUP.md`.
+
 ---
 
 ## 🏗️ ARQUITECTURA
