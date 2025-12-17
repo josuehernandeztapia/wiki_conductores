@@ -250,7 +250,8 @@
 **Implementación/Lab (avance IA):**
 - Existe una PWA de laboratorio para Voz/AVI (`avi_lab`) enfocada en captura de audio + evaluación contra el BFF y generación de datasets.
 - Flujo demo del lab: grabar audio → enviar al BFF (`/v1/voice/evaluate-audio`) → ver `voiceScore/flags/decision` → exportar dataset.
-- Dataset ampliado: 55 preguntas (con subset de 12 críticas + set de preguntas de alto estrés). Nota: en producción la lógica “Voice Pattern” de la wiki sigue usando el set operativo de 12 preguntas; el dataset ampliado sirve para entrenamiento/experimentos y calibración.
+- Dataset ampliado: 55 preguntas (con subset de 12 críticas + set de preguntas de alto estrés). Nota: en producción la lógica "Voice Pattern" de la wiki sigue usando el set operativo de 12 preguntas; el dataset ampliado sirve para entrenamiento/experimentos y calibración.
+- Ver detalles de integración con plataforma en `CORE/ANEXO_IA_IMPLEMENTACIONES_EXTERNAS.md`
 
 ### 8. OpenAI + Pinecone (Agente RAG Postventa)
 **Arquitectura:** WhatsApp → Twilio → Make.com → Flowise → OpenAI (GPT-4) → Pinecone
@@ -264,9 +265,13 @@
 
 
 **Implementación en código (avance IA):**
-- Además del blueprint No‑Code (Make/Flowise), existe una implementación funcional en FastAPI (`agente_postventa`) con enfoque “API-first”.
+- Además del blueprint No‑Code (Make/Flowise), existe una implementación funcional en FastAPI (`agente_postventa`) con enfoque "API-first".
 - Incluye RAG híbrido (Pinecone + BM25) y endpoints listos para integración (ej. `POST /query`, `POST /query_hybrid`, `POST /twilio/whatsapp`, `GET /health`, `GET /metrics`).
 - La operación/despliegue y variables de entorno están documentadas en el propio repo (archivo `OPERATIONS.md`).
+
+**Mapeo repos IA y runbook operativo:**
+- `CORE/ANEXO_IA_IMPLEMENTACIONES_EXTERNAS.md` - Mapea wiki ↔ repos externos (agente_postventa + avi_lab), contratos de endpoints, puntos de acople con plataforma Conductores
+- `CORE/ANEXO_LLMOPS_AGENTOPS.md` - Runbook LLMOps/AgentOps completo: Docker, CI/CD, pipelines de datos, WhatsApp/Twilio, observabilidad, seguridad, QA, incidentes
 
 ---
 
@@ -442,7 +447,7 @@ wiki_conductores/
 │   │   ├── FASE3B_HISTORIAS_USUARIO.md
 │   │   └── FASE3C_REGLAS_NEGOCIO.md
 │   │
-│   ├── Anexos (9 docs)
+│   ├── Anexos (11 docs)
 │   │   ├── ANEXO_ODOO_SETUP.md
 │   │   ├── ANEXO_POSTVENTA_HIGER.md
 │   │   ├── ANEXO_PWA_IMPLEMENTACION.md
@@ -451,7 +456,9 @@ wiki_conductores/
 │   │   ├── ANEXO_SECRETS_ENVIRONMENTS.md
 │   │   ├── ANEXO_RUNBOOK_INCIDENTES.md
 │   │   ├── ANEXO_BFF_STUBS_TO_PROD.md
-│   │   └── ANEXO_IMPLEMENTACION_HU24_CODE_TASKS.md
+│   │   ├── ANEXO_IMPLEMENTACION_HU24_CODE_TASKS.md
+│   │   ├── ANEXO_IA_IMPLEMENTACIONES_EXTERNAS.md
+│   │   └── ANEXO_LLMOPS_AGENTOPS.md
 │   │
 │   ├── Checklists (2 docs)
 │   │   ├── CHECKLIST_HU24_HU25_OPERATIVO.md
@@ -671,8 +678,17 @@ wiki_conductores/
 - [ ] Leí FASE6_DEPLOYMENT.md (AWS infra)
 - [ ] Leí FASE7_MONITORING.md (observabilidad)
 - [ ] Leí ANEXO_SECRETS_ENVIRONMENTS.md
+- [ ] Leí ANEXO_LLMOPS_AGENTOPS.md (servicios IA)
 - [ ] Revisé scripts/preflight_hu24_hu25.sh
 - [ ] Entiendo runbook incidentes
+
+### Ingeniero IA/ML
+- [ ] Leí IDEAS_18_AGENTE_POSTVENTA_RAG.md (blueprint RAG)
+- [ ] Leí IDEAS_99_CIERRE_RAG_POSTVENTA.md (checklist operativo)
+- [ ] Leí ANEXO_IA_IMPLEMENTACIONES_EXTERNAS.md (mapeo repos)
+- [ ] Leí ANEXO_LLMOPS_AGENTOPS.md (runbook completo)
+- [ ] Leí LOGICA_MATEMATICA.md Sección 6 (Voice Pattern)
+- [ ] Revisé repos: agente_postventa + avi_lab
 
 ### Operaciones/Finanzas
 - [ ] Leí FASE9_COREBANKING.md (flujo 14 pasos)
@@ -689,12 +705,13 @@ wiki_conductores/
 |------------|--------|------------|
 | **Blueprint completo** | 100% ✅ | 10 fases CORE |
 | **Especificaciones técnicas** | 100% ✅ | OpenAPI, schemas, anexos |
-| **Runbooks operativos** | 100% ✅ | FASE10, checklists |
+| **Runbooks operativos** | 100% ✅ | FASE10, checklists, LLMOps/AgentOps |
 | **Guías implementación** | 100% ✅ | HU24 code tasks |
 | **Scripts validación** | 100% ✅ | preflight |
 | **Schemas infraestructura** | 100% ✅ | webhook DDL |
 | **Templates evidencias** | 100% ✅ | HU24/HU25 |
 | **Assets visuales** | 100% ✅ | Wireframes, flows |
+| **Mapeo repos IA externos** | 100% ✅ | agente_postventa, avi_lab |
 
 **Completitud Global: 100%** 🎉
 
