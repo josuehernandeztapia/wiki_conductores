@@ -246,6 +246,12 @@
 
 **Persistencia:** tabla `hase_scores` en NEON con JSONB factors auditables
 
+
+**Implementación/Lab (avance IA):**
+- Existe una PWA de laboratorio para Voz/AVI (`avi_lab`) enfocada en captura de audio + evaluación contra el BFF y generación de datasets.
+- Flujo demo del lab: grabar audio → enviar al BFF (`/v1/voice/evaluate-audio`) → ver `voiceScore/flags/decision` → exportar dataset.
+- Dataset ampliado: 55 preguntas (con subset de 12 críticas + set de preguntas de alto estrés). Nota: en producción la lógica “Voice Pattern” de la wiki sigue usando el set operativo de 12 preguntas; el dataset ampliado sirve para entrenamiento/experimentos y calibración.
+
 ### 8. OpenAI + Pinecone (Agente RAG Postventa)
 **Arquitectura:** WhatsApp → Twilio → Make.com → Flowise → OpenAI (GPT-4) → Pinecone
 **Funciones:**
@@ -255,6 +261,12 @@
 - Escalamiento a humano
 
 **Documentación:** `IDEAS/IDEAS_18_AGENTE_POSTVENTA_RAG.md`
+
+
+**Implementación en código (avance IA):**
+- Además del blueprint No‑Code (Make/Flowise), existe una implementación funcional en FastAPI (`agente_postventa`) con enfoque “API-first”.
+- Incluye RAG híbrido (Pinecone + BM25) y endpoints listos para integración (ej. `POST /query`, `POST /query_hybrid`, `POST /twilio/whatsapp`, `GET /health`, `GET /metrics`).
+- La operación/despliegue y variables de entorno están documentadas en el propio repo (archivo `OPERATIONS.md`).
 
 ---
 

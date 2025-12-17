@@ -4,6 +4,24 @@
 
 ---
 
+
+
+## 0) Elegir implementación (Flowise No‑Code vs FastAPI “API‑first”)
+
+Este cierre aplica a dos rutas posibles:
+
+A) Ruta No‑Code (Flowise + Make):
+- Flowise arma el RAG y Make orquesta WhatsApp/Twilio, OCR y registros de tickets.
+
+B) Ruta API‑first (repo `agente_postventa`):
+- Servicio FastAPI que expone endpoints `/query_hybrid` y webhook `/twilio/whatsapp`.
+- RAG híbrido Pinecone + BM25, con memoria por contacto y “casos”/evidencias.
+- Observabilidad: `/health`, `/version`, `/metrics` + endpoints admin protegidos.
+
+Recomendación práctica:
+- Si ya se va a operar con SLAs + métricas + evidencia por ticket, la ruta B simplifica la operación.
+- Si el objetivo es un MVP ultra-rápido con menor ingeniería, la ruta A puede ser suficiente.
+
 ## 1) Infra (Flowise)
 - [ ] Instancia Flowise desplegada (Render u otro)
 - [ ] URL pública + HTTPS

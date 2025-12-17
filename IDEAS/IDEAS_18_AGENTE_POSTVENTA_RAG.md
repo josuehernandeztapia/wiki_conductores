@@ -16,6 +16,30 @@ Sistema de asistencia técnica automatizado para postventa de autobuses Higer qu
 
 ## 🏗️ ARQUITECTURA TÉCNICA
 
+
+## 🚀 Implementación en código (FastAPI) — Avance real (repo `agente_postventa`)
+
+Además del blueprint No‑Code (Make + Flowise), existe una implementación “API‑first” en FastAPI enfocada en operación real y observabilidad.
+
+Qué agrega sobre el blueprint:
+- RAG híbrido: Pinecone (vectores) + BM25 (búsqueda lexical) para mejorar precisión en refacciones y fallas.
+- Memoria por contacto + “casos” (evidencias entregadas vs pendientes) y playbooks por categoría.
+- Pipeline de medios: OCR/vision, transcripción y clasificación para enriquecer el contexto.
+- Endpoints HTTP listos para integrarse con Twilio/Make o cualquier cliente:
+  - POST /query (RAG básico)
+  - POST /query_hybrid (híbrido + memoria + casos)
+  - POST /twilio/whatsapp (webhook WhatsApp)
+  - GET /health, /version, /metrics (diagnóstico/observabilidad)
+  - Endpoints admin protegidos para auditar casos e índices.
+
+Dónde está documentado:
+- En el repo de implementación (`agente_postventa`): README + `OPERATIONS.md` (variables, despliegue, payloads Make/Twilio, smoke tests).
+
+Nota de integración con la wiki:
+- El repo de FastAPI puede operar como reemplazo del bloque “Flowise” o como backend que Flowise/Make invocan.
+- La fuente de datos “viva” (catálogos NEON/Odoo) sigue siendo la misma descrita más abajo (SSOT + endpoints NEON).
+
+
 ### Stack Tecnológico Completo
 
 ```yaml

@@ -636,6 +636,9 @@ LATE_STATUS_ACTIONS = {
 
 **Voice Pattern** es un sistema de análisis de voz que evalúa la **resiliencia financiera** del conductor mediante el análisis de patrones prosódicos (pitch, energía, latencia) y léxicos durante una entrevista telefónica de 12 preguntas.
 
+
+Nota (avance IA): existe un laboratorio de voz (`avi_lab`) con un dataset ampliado de 55 preguntas (incluye subset de 12 preguntas críticas y preguntas de alto estrés) para experimentación, entrenamiento y calibración. La versión operativa descrita en esta wiki mantiene el set de 12 preguntas como flujo estándar, y puede mapearse como subset del dataset ampliado.
+
 Este análisis aporta el **50% del score HASE**, complementando los datos de telemetría GPS y financieros para crear un perfil integral de capacidad de pago.
 
 ### 6.1 Fórmula Voice Score
