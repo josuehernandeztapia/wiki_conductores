@@ -39,6 +39,8 @@ CORE/
 
 ANEXOS/
 └── ANEXO_ODOO_SETUP.md              # Configuración completa Odoo + Core Banking
+└── ANEXO_POSTVENTA_HIGER.md         # Refacciones nacionalizadas + soporte postventa
+└── CORE_FASE2B_UX_WIREFRAMES.md     # UX, wireframes y flujos Visily/DeepSeek
 ```
 
 #### Resumen de Cada Fase
@@ -326,6 +328,8 @@ ROE: 18% anual
 - [ ] Leí CORE_FASE6_DEPLOYMENT.md
 - [ ] Leí CORE_FASE7_MONITORING.md
 - [ ] Consulté ANEXO_ODOO_SETUP.md (configuración ERP)
+- [ ] Consulté ANEXO_POSTVENTA_HIGER.md (refacciones y soporte postventa)
+- [ ] Consulté CORE_FASE2B_UX_WIREFRAMES.md (wireframes y UX)
 - [ ] Exploré al menos 5 archivos IDEAS
 - [ ] Revisé el backend en ~/Documents/conductores-backend/
 - [ ] Entiendo la propuesta de valor completa

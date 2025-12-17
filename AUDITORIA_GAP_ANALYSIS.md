@@ -65,6 +65,8 @@
 
 **Resumen PWA:** De 12 documentos técnicos, solo **3 están 100% documentados** en la wiki (Voice Pattern, Cotizador, Simulador TANDA). **Faltan 9 documentos críticos**.
 
+**Actualización (dic-2025):** Se creó `CORE_FASE2B_UX_WIREFRAMES.md` para centralizar wireframes/prompts y se refirió a `ANEXO_ODOO_SETUP.md` desde HU relevantes. Aún pendiente migrar `PWA - HU.docx`, `Paybook Reglas...`, `PWA - ANGULAR TERCERA VUELTA.docx`, `DemoPWA.docx` y detallar la integración BFF→Odoo.
+
 ---
 
 ### 2. **NEON - Datos GNV y Migración** ❌ CRÍTICO
@@ -85,6 +87,8 @@
 - Datasets de GNV históricos
 - Queries SQL críticos
 
+**Actualización (dic-2025):** `CORE_FASE8_NEON_DATABASE.md` documenta schema, endpoints y migración (incluyendo `Archivo Ventas Diarias GNV`). Falta validar que los CSV/Excel recientes estén cargados en NEON y mantener la API (`neon_openapi_full.yml`) sincronizada.
+
 ---
 
 ### 3. **Corebanking** ❌ CRÍTICO
@@ -96,6 +100,8 @@
 **Gap:** NO existe documentación en la wiki sobre el motor de Corebanking.
 
 **Recomendación:** Crear `CORE_FASE8_COREBANKING.md` o integrar en LOGICA_MATEMATICA como Sección 12.
+
+**Actualización (dic-2025):** `CORE_FASE9_COREBANKING.md` + Sección 8 de `LOGICA_MATEMATICA.md` cubren el flujo 14 pasos, módulo `odoo_corebanking`, cuentas virtuales y conciliación. Falta completar el checklist operativo (integrar webhooks Conekta, dashboards, capacitación) en producción.
 
 ---
 
@@ -113,6 +119,8 @@
 
 **Recomendación:** Crear `IDEAS_18_AGENTE_POSTVENTA_RAG.md` con arquitectura completa.
 
+**Actualización (dic-2025):** `IDEAS_18_AGENTE_POSTVENTA_RAG.md` describe la arquitectura WhatsApp + Make + Flowise/Pinecone + Airtable. Falta migrar la información de `Pinecone.docx`, `Pinecone & Make.docx` y conectar el agente a Odoo (fase 3 del roadmap IDEAS_18).
+
 ---
 
 ### 5. **POSTVENTA - Refacciones Higer** ❌ IMPORTANTE
@@ -126,6 +134,8 @@
 **Gap:** Toda la operación de refacciones Higer (inventario, precios, garantía, nacionalización) NO está documentada en la wiki.
 
 **Recomendación:** Crear `CORE_FASE9_POSTVENTA_HIGER.md`
+
+**Actualización (dic-2025):** se añadió `ANEXO_POSTVENTA_HIGER.md` con catálogo, equivalencias, proveedores, guía de nacionalización y roadmap IA. Falta integrar los datos en NEON/Odoo y conectar la PWA para cerrar el gap.
 
 ---
 
@@ -159,6 +169,8 @@
 **Gap:** NO hay documentación de wireframes ni flujos UX en la wiki.
 
 **Recomendación:** Crear `CORE_FASE2B_UX_WIREFRAMES.md` o agregar carpeta `/wireframes` en la wiki con imágenes.
+
+**Actualización (dic-2025):** se creó `CORE_FASE2B_UX_WIREFRAMES.md` con los prompts DeepSeek, export Visily y flujo IA (Flowise). Falta subir los assets gráficos al repositorio y alinear el código Angular con el diseño final.
 
 ---
 
