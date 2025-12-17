@@ -298,6 +298,37 @@ Ver **LOGICA_MATEMATICA.md Sección 9** para implementación completa.
 
 ---
 
+## 📑 REQUISITOS DOCUMENTALES POR MERCADO Y PRODUCTO
+
+### Aguascalientes
+
+| Producto | Checklist Requerido | Notas |
+|----------|--------------------|-------|
+| **Contado** | **Express**: INE vigente, Comprobante de domicilio, Constancia de Situación Fiscal | Se liquida vía SPEI único; no hay requisitos de colateral social |
+| **Venta a Plazo (Remanente)** | **Individual**: Checklist Express **más** Tarjeta de circulación, Concesión, Constancia fiscal actualizada | Mismo expediente aplica para los tramos 12 y 24 meses; no se solicita factura previa ni aval |
+
+### Estado de México
+
+| Producto | Checklist Requerido | Notas |
+|----------|--------------------|-------|
+| **Contado** | **Express**: INE, Comprobante de domicilio, Constancia fiscal | Si el cliente adquiere el Paquete Productivo completo, el contrato debe incluir los componentes GNV/Tec/Bancas |
+| **Venta a Plazo (Individual/Colectivo)** | **Completo**: Checklist Individual **más** Factura de unidad actual, Carta Aval de Ruta, Convenio de Dación en Pago | Para planes con recaudación se adjuntan placas y concesión con el registro del sobreprecio GNV |
+| **Ahorro Programado** | **Básico**: INE + Comprobante domicilio; si se enciende recaudación se añaden Tarjeta de circulación y Concesión | Cuando el saldo ahorro ≥ meta de enganche, la PWA dispara la conversión a Venta y solicita el **expediente completo** |
+| **TANDA (Crédito Colectivo)** | **Completo por miembro**: Checklist Individual + Colateral social (Carta Aval + Convenio Dación) + Convenio Marco de ruta activo | Antes de adjudicar unidades, cada miembro debe estar vinculado en Odoo a su ruta y contar con expediente sin faltantes |
+
+> **Recordatorio PWA:** la función `getRequiredDocuments()` ya contempla estas variantes dependiendo del mercado, producto y si el flujo activa recaudación (`CORE_FASE3C_REGLAS_NEGOCIO.md:399`).
+
+### 📈 TIR Mínima Admitida por Producto
+
+| Mercado / Producto | Tasa nominal base | TIR mínima posterior a restructura | Comentarios |
+|--------------------|-------------------|-----------------------------------|-------------|
+| **AGS - Venta a Plazo (Remanente)** | 25.5% anual | **25.5%** | Cualquier escenario que reduzca la TIR por debajo de la tasa nominal se rechaza automáticamente para preservar la estructura de capital interna. |
+| **EDOMEX - Venta a Plazo Individual** | 29.9% anual | **29.9%** | El motor de protección (diferir, recalendar, step-down) debe mantener TIR ≥ 29.9%; si cae, la restructura se marca como inválida. |
+| **EDOMEX - TANDA (Colectivo)** | 29.9% anual | **29.9%** | Aunque el flujo es grupal, la TIR post-escenario debe igualar la tasa nominal para sostener la rentabilidad del pool. |
+| **Crédito Directo Nacional (futuros despliegues)** | 14‑20% (según tier interno) | **Igual a la tasa nominal aplicable** | Referencia para cualquier producto donde la tasa dependa del score; `validate_protection_scenario` debe recibir `min_irr = rate`. |
+
+> Estos umbrales alimentan el validador de la Sección 7 de `LOGICA_MATEMATICA.md`. El motor BFF debe recibir `min_irr` conforme al producto seleccionado para bloquear restructuras que comprometan la rentabilidad.
+
 ## 📊 TABLA COMPARATIVA DE REGLAS
 
 ### Comparación por Mercado
@@ -495,6 +526,18 @@ function validateTerm(
   return { valid: true };
 }
 ```
+
+---
+
+## 🔁 PUNTOS OPERATIVOS CLAVE (VERSIÓN REVISADA)
+
+- **Enganches y Financiamiento**: AGS exige 60 % de enganche (financiamiento 40 %) para el remanente, mientras EDOMEX admite 15‑20 % (individual) o 15 % (TANDA) y financia seguro + Paquete Productivo.
+- **Plazos y Tasas**: Validar 12/24 meses a 25.5 % anual en AGS frente a 48/60 meses a 29.9 % en EDOMEX (`validateTerm`).
+- **Pago Híbrido y Sobreprecio**: Solo en EDOMEX; requiere definir porcentaje Recaudo/Aportaciones y respetar el máximo $10 MXN/kg (`validateGNVSurcharge`).
+- **Conversión Automática Ahorro→Venta**: Al alcanzar la meta, la PWA aplica el saldo como enganche y solicita el expediente completo antes de originar el crédito.
+- **TANDA Debt-First**: Los flujos grupales primero cubren deuda de unidades entregadas y luego ahorran para la siguiente adjudicación; cualquier déficit bloquea nuevas entregas.
+
+Estas directrices se alinean con la lógica matemática (Secciones 1, 7, 9 y 10) y con las historias de usuario (HU05‑HU20), garantizando consistencia entre PWA, backend y Odoo.
 
 ---
 
