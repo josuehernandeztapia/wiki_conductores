@@ -23,9 +23,9 @@
 
 ## 📂 Estructura de la Wiki
 
-### 🔷 CORE (7 Fases - Manual Quirúrgico)
+### 🔷 CORE (10 Fases - Manual Quirúrgico)
 
-La metodología **Manual Quirúrgico** divide el proyecto en 7 fases secuenciales, desde diagnóstico hasta producción:
+La metodología **Manual Quirúrgico** divide el proyecto en 10 fases secuenciales, desde diagnóstico hasta piloto operativo:
 
 ```
 CORE/
@@ -35,14 +35,33 @@ CORE/
 ├── CORE_FASE4_INTEGRACIONES.md      # 8 APIs externas documentadas
 ├── CORE_FASE5_TESTING.md            # Unit, integration, E2E tests
 ├── CORE_FASE6_DEPLOYMENT.md         # AWS, CI/CD, rollback
-└── CORE_FASE7_MONITORING.md         # Métricas, logs, alertas
+├── CORE_FASE7_MONITORING.md         # Métricas, logs, alertas
+├── CORE_FASE8_NEON_DATABASE.md      # Schema NEON, OpenAPI, datasets GNV
+├── CORE_FASE9_COREBANKING.md        # Core bancario, conciliación, dispersión
+└── CORE_FASE10_PILOTO_OPERATIVO.md  # Runbook HU25, gates, evidencias
+
+EXTENSIONES/
+├── CORE_FASE2B_UX_WIREFRAMES.md     # UX, wireframes y flujos Visily/DeepSeek
+├── CORE_FASE3B_HISTORIAS_USUARIO.md # HU completas con matriz componentes
+└── CORE_FASE3C_REGLAS_NEGOCIO.md    # Reglas AGS/EdoMéx por producto
 
 ANEXOS/
-└── ANEXO_ODOO_SETUP.md              # Configuración completa Odoo + Core Banking
-└── ANEXO_POSTVENTA_HIGER.md         # Refacciones nacionalizadas + soporte postventa
-└── CORE_FASE2B_UX_WIREFRAMES.md     # UX, wireframes y flujos Visily/DeepSeek
-└── ANEXO_PWA_IMPLEMENTACION.md      # HU, reglas y demo Angular de la PWA
-└── ANEXO_NEON_ACTUALIZACIONES.md    # OpenAPI, diccionario y migraciones GNV
+├── ANEXO_ODOO_SETUP.md              # Configuración completa Odoo + Core Banking
+├── ANEXO_POSTVENTA_HIGER.md         # Refacciones nacionalizadas + soporte postventa
+├── ANEXO_PWA_IMPLEMENTACION.md      # HU, reglas y demo Angular de la PWA
+├── ANEXO_NEON_ACTUALIZACIONES.md    # OpenAPI, diccionario y migraciones GNV
+├── ANEXO_NEON_SCHEMA_DICTIONARY.md  # Diccionario de datos NEON completo
+├── ANEXO_SECRETS_ENVIRONMENTS.md    # Secrets y ambientes (staging/prod)
+├── ANEXO_RUNBOOK_INCIDENTES.md      # Runbook de incidentes operativos
+└── ANEXO_BFF_STUBS_TO_PROD.md       # Transición BFF stubs a producción
+
+CHECKLISTS/
+├── CHECKLIST_HU24_HU25_OPERATIVO.md # Checklist operativo integraciones + piloto
+└── CORE_FASE9_CHECKLIST_CIERRE_PILOTO.md # Checklist cierre del piloto
+
+EVIDENCIAS/
+├── EVIDENCIAS_TEMPLATE/HU24/        # Templates evidencias integraciones
+└── EVIDENCIAS_TEMPLATE/HU25/        # Templates evidencias piloto E2E
 ```
 
 #### Resumen de Cada Fase
@@ -101,9 +120,33 @@ ANEXOS/
 - Alertas inteligentes (PagerDuty)
 - SLOs y error budgets
 
+**FASE 8: NEON DATABASE** 🗄️
+- Schema completo NEON (telematics/business/intelligence)
+- OpenAPI specification versionada
+- Diccionario de datos completo
+- Datasets GNV históricos (388K+ registros)
+- Migración Consware → NEON
+- Catálogos part_equivalences y spare_stock
+
+**FASE 9: COREBANKING** 🏦
+- Flujo 14 pasos originación → dispersión
+- Módulo odoo_corebanking (cuentas virtuales)
+- Conciliación automática NEON ↔ Odoo
+- Webhooks Conekta + idempotencia
+- Backups automáticos + restore
+- Checklist de cierre del piloto
+
+**FASE 10: PILOTO OPERATIVO** 🚀
+- Runbook HU25 end-to-end (11 pasos)
+- Gates técnicos, de integraciones y operativos
+- Guión del piloto con evidencias auditables
+- Smoke tests obligatorios pre-piloto
+- Criterios Go/No-Go para decisión
+- Templates de evidencias HU24/HU25
+
 ---
 
-### 💡 IDEAS (17 Documentos - Expansión del Modelo)
+### 💡 IDEAS (19 Documentos - Expansión del Modelo)
 
 Ideas de expansión y crecimiento post-MVP:
 
@@ -125,7 +168,9 @@ IDEAS/
 ├── IDEAS_14_SUPER_APP.md                  # WeChat para conductores
 ├── IDEAS_15_INTELIGENCIA_MERCADO.md       # Venta data insights
 ├── IDEAS_16_ALIANZAS_ESTRATEGICAS.md      # OEMs, gobierno, fondos
-└── IDEAS_17_EXITS_ESTRATEGIAS.md          # IPO, M&A, PE valuation
+├── IDEAS_17_EXITS_ESTRATEGIAS.md          # IPO, M&A, PE valuation
+├── IDEAS_18_AGENTE_POSTVENTA_RAG.md       # Agente RAG postventa (Flowise + Pinecone)
+└── IDEAS_99_CIERRE_RAG_POSTVENTA.md       # Checklist operativo RAG staging
 ```
 
 ---
@@ -322,6 +367,7 @@ ROE: 18% anual
 
 ## ✅ Checklist de Lectura
 
+### CORE (Fases 1-10)
 - [ ] Leí CORE_FASE1_DIAGNOSTICO.md
 - [ ] Leí CORE_FASE2_ARQUITECTURA.md
 - [ ] Leí CORE_FASE3_IMPLEMENTACION.md
@@ -329,15 +375,36 @@ ROE: 18% anual
 - [ ] Leí CORE_FASE5_TESTING.md
 - [ ] Leí CORE_FASE6_DEPLOYMENT.md
 - [ ] Leí CORE_FASE7_MONITORING.md
+- [ ] Leí CORE_FASE8_NEON_DATABASE.md
+- [ ] Leí CORE_FASE9_COREBANKING.md
+- [ ] Leí CORE_FASE10_PILOTO_OPERATIVO.md
+
+### Extensiones y Anexos
+- [ ] Consulté CORE_FASE2B_UX_WIREFRAMES.md (wireframes y UX)
+- [ ] Consulté CORE_FASE3B_HISTORIAS_USUARIO.md (HU completas)
+- [ ] Consulté CORE_FASE3C_REGLAS_NEGOCIO.md (reglas AGS/EdoMéx)
 - [ ] Consulté ANEXO_ODOO_SETUP.md (configuración ERP)
 - [ ] Consulté ANEXO_POSTVENTA_HIGER.md (refacciones y soporte postventa)
-- [ ] Consulté CORE_FASE2B_UX_WIREFRAMES.md (wireframes y UX)
 - [ ] Consulté ANEXO_PWA_IMPLEMENTACION.md (HU/Angular/Demo)
 - [ ] Consulté ANEXO_NEON_ACTUALIZACIONES.md (schema/API/migraciones)
+- [ ] Consulté ANEXO_SECRETS_ENVIRONMENTS.md (secrets staging/prod)
+
+### Checklists Operativos
+- [ ] Revisé CHECKLIST_HU24_HU25_OPERATIVO.md (integraciones + piloto)
+- [ ] Revisé CORE_FASE9_CHECKLIST_CIERRE_PILOTO.md
+
+### IDEAS
 - [ ] Exploré al menos 5 archivos IDEAS
+- [ ] Revisé IDEAS_18_AGENTE_POSTVENTA_RAG.md
+- [ ] Revisé IDEAS_99_CIERRE_RAG_POSTVENTA.md
+
+### Backend
 - [ ] Revisé el backend en ~/Documents/conductores-backend/
+
+### Comprensión General
 - [ ] Entiendo la propuesta de valor completa
 - [ ] Listo para implementar / pitch a inversionistas
+- [ ] Listo para ejecutar piloto (HU24/HU25)
 
 ---
 
