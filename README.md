@@ -46,14 +46,15 @@ EXTENSIONES/
 └── CORE_FASE3C_REGLAS_NEGOCIO.md    # Reglas AGS/EdoMéx por producto
 
 ANEXOS/
-├── ANEXO_ODOO_SETUP.md              # Configuración completa Odoo + Core Banking
-├── ANEXO_POSTVENTA_HIGER.md         # Refacciones nacionalizadas + soporte postventa
-├── ANEXO_PWA_IMPLEMENTACION.md      # HU, reglas y demo Angular de la PWA
-├── ANEXO_NEON_ACTUALIZACIONES.md    # OpenAPI, diccionario y migraciones GNV
-├── ANEXO_NEON_SCHEMA_DICTIONARY.md  # Diccionario de datos NEON completo
-├── ANEXO_SECRETS_ENVIRONMENTS.md    # Secrets y ambientes (staging/prod)
-├── ANEXO_RUNBOOK_INCIDENTES.md      # Runbook de incidentes operativos
-└── ANEXO_BFF_STUBS_TO_PROD.md       # Transición BFF stubs a producción
+├── ANEXO_ODOO_SETUP.md                    # Configuración completa Odoo + Core Banking
+├── ANEXO_POSTVENTA_HIGER.md               # Refacciones nacionalizadas + soporte postventa
+├── ANEXO_PWA_IMPLEMENTACION.md            # HU, reglas y demo Angular de la PWA
+├── ANEXO_NEON_ACTUALIZACIONES.md          # OpenAPI, diccionario y migraciones GNV
+├── ANEXO_NEON_SCHEMA_DICTIONARY.md        # Diccionario de datos NEON completo
+├── ANEXO_SECRETS_ENVIRONMENTS.md          # Secrets y ambientes (staging/prod)
+├── ANEXO_RUNBOOK_INCIDENTES.md            # Runbook de incidentes operativos
+├── ANEXO_BFF_STUBS_TO_PROD.md             # Transición BFF stubs a producción
+└── ANEXO_IMPLEMENTACION_HU24_CODE_TASKS.md # Tareas código HU24 (stubs → prod)
 
 CHECKLISTS/
 ├── CHECKLIST_HU24_HU25_OPERATIVO.md # Checklist operativo integraciones + piloto
@@ -62,7 +63,13 @@ CHECKLISTS/
 EVIDENCIAS/
 ├── EVIDENCIAS_TEMPLATE/HU24/        # Templates evidencias integraciones
 └── EVIDENCIAS_TEMPLATE/HU25/        # Templates evidencias piloto E2E
+
+SCRIPTS & SQL/
+├── scripts/preflight_hu24_hu25.sh   # Validación staging pre-piloto
+└── sql/001_webhook_retry_tables.sql # DDL cola webhooks (idempotencia)
 ```
+
+**Nota**: Ver `CORE/README_OPS.md` para documentación de scripts y SQL.
 
 #### Resumen de Cada Fase
 
