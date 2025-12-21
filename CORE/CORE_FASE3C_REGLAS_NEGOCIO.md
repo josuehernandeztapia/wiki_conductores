@@ -25,6 +25,27 @@ La PWA del asesor debe ser programada para **ejecutar y validar estas reglas aut
 
 ---
 
+## ⚙️ Reglas transversales (morosidad, pagos excepcionales, split híbrido)
+
+### Morosidad
+- Cada mercado define **tasa_morosidad = tasa_nominal + spread_mora** (ver `ANEXO_ODOO_SETUP.md`).
+- Fórmula sugerida (AGS): `interes_mora = saldo_vencido * (tasa_morosidad / 12) * (dias_vencidos / 30)`.
+- **Secuencia obligatoria:** primero se ofrece Protección Conductores (pausa/diferir/recalibrar). Solo si el cliente no la activa o agota las ocasiones permitidas (2-3 por vida del contrato, parámetro por producto) se considera en mora.
+
+### Pagos distintos a la mensualidad
+- **Pago mayor a la cuota:** el excedente se aplica a capital/prepago; se puede recalcular el calendario (ver `LOGICA_MATEMATICA.md`, sección amortización).
+- **Pago menor:** se registra como parcialidad; genera alerta (HU19) y, tras agotar protección, se calcula interés moratorio con la fórmula anterior.
+- **Pago adelantado:** se registra como prepago; ajusta saldo/plazo según las reglas del cotizador.
+
+### Split de pagos híbridos
+- El modelo "50/50" (recaudación GNV vs aportaciones voluntarias) es **parametrizable**: `payment_split = {recaudo_pct, aportacion_pct}` por mercado/producto/cliente.
+- Mientras existan unidades por entregar el split default es 50/50; una vez entregadas todas, el flujo se vuelve 100 % deuda (o el valor configurado). Documentar cambios en Odoo/NEON y mostrarlos en el cotizador/contratos.
+
+### Ahorro programado
+- Las aportaciones son un pasivo y **no generan intereses** (regulación SAPI). Los incentivos se modelan como matching/bonos, no como captación.
+
+---
+
 ## 🏙️ MERCADO 1: AGUASCALIENTES
 
 ### Características del Mercado

@@ -223,31 +223,27 @@ def validate_transaction(tx):
 ```python
 POST /api/v1/account.move
 {
-  "journal_id": 1,  # Diario "Pagos Clientes"
+  "journal_id": 1,
   "date": "2025-01-15",
   "ref": "PAGO-chr_abc123",
   "line_ids": [
-    {
-      "account_id": 101,  # Banco
-      "debit": 50.00,
-      "credit": 0
-    },
-    {
-      "account_id": 405,  # Ingreso por financiamiento
-      "debit": 0,
-      "credit": 50.00
-    }
+    {"account_id": 101, "debit": 5000.00, "credit": 0},
+    {"account_id": 405, "debit": 0, "credit": 3500.00},
+    {"account_id": 209, "debit": 0, "credit": 560.00},
+    {"account_id": 480, "debit": 0, "credit": 300.00}
   ]
 }
 ```
 
 **Cuentas Odoo:**
 - **101** - Banco NEON (Activo)
-- **102** - Conekta por cobrar (Activo)
-- **405** - Ingreso por pagos clientes (Ingreso)
+- **102** - Conekta por cobrar (Activo, opcional)
+- **405** - Ingreso por financiamiento/capital
+- **209** - IVA trasladado (Ingreso/Impuesto)
+- **480** - Interés moratorio (Ingreso extraordinario)
 - **201** - Cuentas por pagar proveedores (Pasivo)
 
-**Output:** Asiento contable registrado, `move_id` generado
+**Output:** Asiento contable registrado (capital + interés + IVA + morosidad, si aplica). Si existe factura por intereses/cargos, se emite en este paso (`account.move` tipo factura) y se liga mediante `invoice_origin`. `move_id` generado.
 
 ---
 
@@ -270,6 +266,8 @@ POST /api/v1/account.move
 3. **Si no match:**
    - Crear alerta en Airtable
    - Asignar a revisor contable
+
+> **Nota HU11/HU18:** la conciliación respeta el `payment_split` activo. Mientras existan unidades por entregar, se concilian los dos flujos (recaudo vs aportaciones). Una vez entregadas todas, el job ajusta el split a 100 % deuda (o el valor configurado) y actualiza la cuenta analítica.
 
 **Query SQL (NEON):**
 ```sql

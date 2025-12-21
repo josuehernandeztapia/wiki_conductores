@@ -138,6 +138,16 @@ def calculate_all_scenarios(
 
 ---
 
+### Parámetros adicionales del cotizador (MVP 2025)
+
+- `quote_valid_days`: vigencia de la cotización (default 7 días, parametrizable por mercado). Este valor se imprime en el PDF/WhatsApp y expira en automático.
+- `payment_split`: porcentaje de recaudo vs aportaciones voluntarias (ver reglas transversales). El cotizador debe dejar explícito el split actual (ej. 50 % GNV / 50 % Conekta) y formará parte del contrato.
+- **Seguros**: en EdoMéx el cotizador suma automáticamente seguros de vehículo y vida (montos definidos en `CORE/CORE_FASE3C_REGLAS_NEGOCIO.md`).
+- **Contratación electrónica**: al aceptar la cotización se invoca HU23 (Mifiel) para generar y firmar digitalmente.
+- **IVA sobre intereses**: cada cuota muestra desglose capital / interés / IVA interés (`interes_iva = interes * 0.16`).
+- **Pagos excepcionales**: el cotizador expone funciones de prepago/ajuste para registrar pagos mayores, menores o anticipados (ver secciones 3 y 5).
+- **Ahorro programado**: aportaciones = pasivo sin intereses (regulación SAPI). Cualquier incentivo se modela como matching o bono.
+
 ## 2. MOTOR HASE - Scoring Crediticio
 
 ### Fórmula de Scoring
@@ -416,12 +426,15 @@ def generate_payment_schedule(
     schedule = []
     balance = monto
 
-    for mes in range(1, plazo_meses + 1):
-        # Interés del mes
-        interes = balance * tasa_mensual
+    IVA_TASA = Decimal("0.16")
 
-        # Capital del mes
-        capital = pago_mensual - interes
+    for mes in range(1, plazo_meses + 1):
+        # Interés del mes (sobre saldo insoluto)
+        interes = balance * tasa_mensual
+        interes_iva = interes * IVA_TASA
+
+        # Capital del mes (pago - interés - IVA interés)
+        capital = pago_mensual - interes - interes_iva
 
         # Nuevo balance
         balance_after = balance - capital
@@ -435,6 +448,7 @@ def generate_payment_schedule(
             "pago_total": pago_mensual,
             "capital": capital,
             "interes": interes,
+            "interes_iva": interes_iva,
             "balance_before": balance,
             "balance_after": max(Decimal("0"), balance_after)
         })
@@ -465,6 +479,11 @@ Mes | Pago      | Capital   | Interés   | Balance
 Total Pagado: $308,416.11
 Total Intereses: $58,416.11
 ```
+
+### Pagos excepcionales
+- **Pago mayor a la cuota:** `excedente = pago_real - pago_mensual`. Se aplica como prepago a capital (`capital_extra = excedente`) y puede recalcularse el calendario (reduce plazo o pago). Queda registrado en NEON/Odoo como prepayment.
+- **Pago menor:** se captura como parcialidad. El saldo remanente pasa a “pago pendiente” y, tras agotar medidas de protección, genera interés moratorio usando la fórmula de la sección 5.
+- **Pago adelantado (antes de fecha):** se trata como prepago completo del periodo; se recalcula balance y, si el cliente mantiene conducta positiva, puede acceder a beneficios (ej. reducción de tasa).
 
 ---
 
@@ -627,6 +646,16 @@ LATE_STATUS_ACTIONS = {
     }
 }
 ```
+
+### Fórmula de interés moratorio
+
+```
+interes_mora = saldo_vencido × (tasa_morosidad / 12) × (dias_retraso / 30)
+```
+
+- `tasa_morosidad` = tasa nominal del producto + spread_mora (ver `CORE/CORE_FASE3C_REGLAS_NEGOCIO.md`).
+- Solo se aplica una vez agotadas o rechazadas las opciones de Protección Conductores (pausa/diferir/recalibrar). Mientras la protección esté activa, no se generan cargos de mora.
+- Los intereses moratorios se registran en Odoo (journal de intereses) y en NEON (tabla `transactions`) para auditoría y conciliación (HU11/HU25).
 
 ---
 
@@ -1758,16 +1787,18 @@ Protección Esencial (Incluida):
   Costo: Incluido en tasa base
   Beneficios:
     - PMA (Predictive Maintenance Advisor)
-    - 1 restructura anual
+    - 1 restructura anual (hasta 2 eventos durante la vida del contrato)
 
 Protección Total (Opcional):
   Costo: +0.5% tasa anual
   Beneficios:
     - Todo de Esencial
-    - 3 restructuras anuales
+    - 3 restructuras anuales (hasta 3 eventos durante la vida del contrato)
     - Línea crédito imprevistos ($5K-$10K)
     - Asesoría legal básica
 ```
+
+> **Secuencia Protección → Mora:** los cargos de morosidad solo se activan cuando el cliente no utiliza estas opciones o ya alcanzó el máximo de eventos permitido. Mientras exista una protección vigente, el caso permanece en estatus regular.
 
 ### 7.6 Ejemplo Completo
 
@@ -2787,7 +2818,14 @@ def validate_group_scenario(group: GroupInput) -> dict:
     }
 ```
 
-### 9.8 Testing
+### 9.8 Ajustes operativos adicionales
+- **Alta/baja/traspaso de miembros:** el builder acepta eventos `add_member`, `remove_member`, `transfer_rights`. Cada evento actualiza `group_members` en NEON y las cuentas analíticas en Odoo (ver `ANEXO_ODOO_SETUP.md`). Se requiere evidencia documental del líder para aprobar cambios.
+- **Split parametrizable:** el motor lee `payment_split` (recaudo vs aportaciones) en cada ciclo; los cambios se persisten para conciliación (HU11) y se muestran en el dashboard HU18.
+- **Cash-flow vs deuda contable:** además del estado de deuda, se calcula `cash_flow_actual = sum(pagos_recaudo + pagos_aportacion)` y se muestra en PWA/NEON (`group_payments`). Sirve para monitorear liquidez real del grupo.
+- **Interés sobre saldos insolutos:** se permite configurar `amortization_mode` (french | saldo_insoluto). Cuando se elige “saldos insolutos” los intereses se calculan sobre balances actualizados y se ajustan cuando existan pagos parciales/prepagos.
+- **Mensualidades variables por temporada:** `seasonal_schedule` permite definir percentiles por mes (ej. temporada alta 120 %, baja 80 %). El motor distribuye pagos con estos pesos y genera alertas si algún mes queda por debajo del mínimo requerido.
+
+### 9.9 Testing
 
 **Unit Tests (Motor):**
 

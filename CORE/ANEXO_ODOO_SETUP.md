@@ -32,6 +32,7 @@ Los scripts XML/Studio crean categorías y productos homologueados para la PWA:
 | `SEG-ANUAL` | Seguro vehicular anual | Todos | $36,700 por año | Campo `x_multiplied_by_term` para multiplicar por plazo (48/60 m). |
 
 > Los templates incluyen metadatos (`x_market`, `x_is_component`, `x_required_for_financing`) para que la API PWA pueda filtrar y construir cotizaciones dinámicas.
+> **Campos adicionales (dic-2025):** `x_tasa_morosidad`, `x_spread_mora`, `x_payment_split_default`, `x_quote_valid_days` y `x_allow_prepaid` permiten definir tasas moratorias, split híbrido y vigencia a nivel producto. Estos campos se exponen vía API para alimentar la PWA/BFF y el módulo de conciliación.
 
 ---
 
@@ -107,6 +108,8 @@ Configurar en `Settings > Technical > Parameters > System Parameters`:
 | `make.webhook.*` | Webhooks para eventos (lead welcome, payment, hitos TANDA) |
 | `airtable.api_key`, `airtable.base_id` | Staging documental |
 | `conductores.pwa_url`, `conductores.erp_url` | URLs oficiales |
+| `conductores.payment_split.default` | JSON {"recaudo_pct":0.5,"aportacion_pct":0.5} |
+| `conductores.quote_valid_days` | Entero (ej. 7) |
 
 Además de los parámetros, la receta incluye plantillas de mensajes, templates WhatsApp y escenarios Make (ruteo de pagos, milestones de TANDA, confirmaciones a asesores).
 
