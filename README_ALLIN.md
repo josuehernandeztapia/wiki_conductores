@@ -36,7 +36,7 @@
 ┌─────────────────────────────────────────────────────────────┐
 │                         FRONTEND                             │
 ├─────────────────────────────────────────────────────────────┤
-│ PWA (Angular 17+ - código real en pwa_angular_v5)                                             │
+│ PWA (Angular 17+ Enterprise /web - pwa_angular_v5)             │
 │ - Offline-first, Progressive Web App                         │
 │ - Cockpit asesor + portal cliente                           │
 │ - Cotizador dinámico (AGS/EdoMéx)                           │

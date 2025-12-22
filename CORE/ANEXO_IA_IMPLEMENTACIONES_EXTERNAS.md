@@ -112,4 +112,64 @@ Qué falta para "cerrar" la integración con la plataforma Conductores
   - LOGICA_MATEMATICA.md (voice/hase) y/o anexos de integración BFF
   - **NUEVOS**: IDEAS/SCORING_ALGORITHMS.md, IDEAS/TELEMETRY_INTEGRATION.md (enhanced risk scoring)
 
-**Actualizado**: Diciembre 21, 2025 - Enhanced Risk Scoring Engine implementación completa
+4) **NUEVO - Repo: pwa_angular_v5 (/web - Angular PWA Enterprise)**
+Qué es
+- PWA Angular 17+ con arquitectura enterprise moderna en directorio `/web`
+- 50+ módulos especializados con testing infrastructure completo
+- Demo system avanzado con 10+ scenario seeds y analytics dashboard
+- Signal-based reactive state management con quality gates enterprise
+
+**Componentes Principales:**
+- **Core Business**: Dashboard, Clientes, Cotizador, Simulador, Protección
+- **Advanced Systems**: AVI Interview, KYC biométrico, Document Center con OCR
+- **Demo Framework**: Scenario testing con event tracking y performance metrics
+- **Quality Infrastructure**: 150+ test cases, E2E Playwright, accessibility compliance
+
+**Arquitectura Técnica:**
+```
+Angular 17+ → Standalone Components → Signal State → PWA Features
+     ↓
+Demo System → Scenario Seeds → Analytics Dashboard → Quality Gates
+     ↓
+AVI/Voice → KYC Biometric → TIR Protection → Enhanced Integration Ready
+```
+
+**Features Implementados (Diciembre 2025):**
+- **Enterprise Architecture**: `/web` codebase con CI/CD pipeline completo
+- **Quality Gates**: >90% coverage, <2.6MB bundle, >95 Lighthouse score
+- **Demo System**: 10+ scenarios (AVI Test, KYC Test, Finanzas What-If, Protección)
+- **Integration Ready**: Enhanced scoring compatible, Smart Consolidation ready
+- **PWA Compliance**: Service worker, offline support, responsive design
+
+**Scripts de Operación:**
+- `cd web && npm run ci:qa` → Full quality pipeline validation
+- `cd web && npm run ci:test:stores` → Core business logic testing
+- `cd web && npm run ci:playwright` → E2E cross-browser testing
+- `cd web && npm start` → Development server port 4200
+
+**Integration con Enhanced Features:**
+- **Enhanced Scoring**: Signal-based state ready para mathematical optimization
+- **Smart Consolidation**: Service layer compatible con anti-spam logic
+- **TIR/AVI Enhancement**: Protection module y voice system integration points
+- **Real-time Telemetry**: Analytics infrastructure para streaming data
+
+Dónde se documenta en la wiki
+- **README_ALLIN.md** (referencia básica del repository)
+- **ANEXO_PWA_IMPLEMENTACION.md** (guía técnica enterprise completa - NUEVO)
+
+Qué falta para "cerrar" la integración con la plataforma Conductores
+- **Enhanced Features Deployment** en PWA production environment
+- **Mathematical Scoring Integration** con optimized weights deployment
+- **Smart Consolidation** activation en production workflow
+- **Real-time Telemetry** streaming connection con enhanced risk engine
+- **Cross-platform Integration** con agente_postventa y rag-pinecone systems
+
+**Status (Diciembre 2025):** ✅ **Production Ready Enterprise PWA**
+- Angular 17+ architecture con comprehensive testing
+- Demo system completo para validation y training
+- Enhanced features integration points ready
+- Quality gates enterprise establecidos y funcionando
+
+---
+
+**Actualizado**: Diciembre 22, 2025 - PWA Angular v5 Enterprise Documentation Complete + Enhanced Risk Scoring Engine implementación completa
